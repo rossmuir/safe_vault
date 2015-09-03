@@ -19,15 +19,7 @@
 
 mod database;
 
-use cbor::Decoder;
-
-use routing::error::{ResponseError, InterfaceError};
-use routing::NameType;
-use routing::node_interface::MethodCall;
-use routing::sendable::Sendable;
-use routing::types::MessageAction;
-
-use data_parser::Data;
+use routing_types::*;
 
 pub use self::database::{MaidManagerAccountWrapper, MaidManagerAccount};
 
@@ -44,48 +36,12 @@ impl MaidManager {
         }
     }
 
-    pub fn handle_put(&mut self, from: &NameType,
-                      serialised_data: &Vec<u8>) -> Result<MessageAction, InterfaceError> {
-        let mut decoder = Decoder::from_bytes(&serialised_data[..]);
-        let mut destinations: Vec<NameType> = Vec::new();
-        if let Some(parsed_data) = decoder.decode().next().and_then(|result| result.ok()) {
-            let data_name = match parsed_data {
-                Data::Immutable(parsed) => {
-                    if !self.db_.put_data(from, parsed.value().len() as u64) {
-                        return Err(From::from(ResponseError::InvalidRequest));
-                    }
-                    parsed.name()
-                },
-                // The assumption here is Backup and Sacrificial copies incur storage charge.
-                // However, in the case of not enough allowance, no put_failure is to be sent back;
-                // just abort the flow.
-                Data::ImmutableBackup(parsed) => {
-                    if !self.db_.put_data(from, parsed.value().len() as u64) {
-                        return Err(InterfaceError::Abort);
-                    }
-                    parsed.name()
-                },
-                Data::ImmutableSacrificial(parsed) => {
-                    if !self.db_.put_data(from, parsed.value().len() as u64) {
-                        return Err(InterfaceError::Abort);
-                    }
-                    parsed.name()
-                },
-                Data::Structured(parsed) => {
-                    if !self.db_.put_data(from, parsed.value().len() as u64) {
-                        return Err(From::from(ResponseError::InvalidRequest));
-                    }
-                    parsed.name()
-                },
-                // PublicMaid doesn't use any allowance
-                Data::PublicMaid(parsed) => parsed.name(),
-                _ => return Err(From::from(ResponseError::InvalidRequest)),
-            };
-            destinations.push(data_name);
+    pub fn handle_put(&mut self, from: &NameType, data: Data) -> Vec<MethodCall> {
+        if self.db_.put_data(from, data.payload_size() as u64) {
+            vec![MethodCall::Put { location: Authority::NaeManager(data.name()), content: data }]
         } else {
-            return Err(From::from(ResponseError::InvalidRequest));
+            vec![MethodCall::NotEnoughAllowance]
         }
-        Ok(MessageAction::SendOn(destinations))
     }
 
     pub fn handle_account_transfer(&mut self, merged_account: MaidManagerAccountWrapper) {
@@ -100,34 +56,31 @@ impl MaidManager {
 
 #[cfg(test)]
 mod test {
-    use maidsafe_types::ImmutableData;
-    use routing;
     use super::*;
-    use routing::types::*;
-    use routing::NameType;
-    use routing::sendable::Sendable;
+
+    use routing_types::*;
 
     #[test]
     fn handle_put() {
         let mut maid_manager = MaidManager::new();
-        let from: NameType = routing::test_utils::Random::generate_random();
+        let from = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         let value = generate_random_vec_u8(1024);
-        let data = ImmutableData::new(value);
-        let put_result = maid_manager.handle_put(&from, &data.serialised_contents());
-        assert_eq!(put_result.is_err(), false);
-        match put_result.ok().unwrap() {
-            MessageAction::SendOn(ref x) => {
-                assert_eq!(x.len(), 1);
-                assert_eq!(x[0], data.name());
+        let data = ImmutableData::new(ImmutableDataType::Normal, value);
+        let put_result = maid_manager.handle_put(&from, Data::ImmutableData(data.clone()));
+        assert_eq!(put_result.len(), 1);
+        match put_result[0] {
+            MethodCall::Put { ref location, ref content } => {
+                assert_eq!(*location, Authority::NaeManager(data.name()));
+                assert_eq!(*content, Data::ImmutableData(data));
             }
-            MessageAction::Reply(_) => panic!("Unexpected"),
+            _ => panic!("Unexpected"),
         }
     }
 
     #[test]
     fn handle_account_transfer() {
         let mut maid_manager = MaidManager::new();
-        let name : NameType = routing::test_utils::Random::generate_random();
+        let name = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         let account_wrapper = MaidManagerAccountWrapper::new(name.clone(), MaidManagerAccount::new());
         maid_manager.handle_account_transfer(account_wrapper);
         assert_eq!(maid_manager.db_.exist(&name), true);

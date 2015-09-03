@@ -1,6 +1,7 @@
 *.exe
 *.lock
 *.swp
+*.rsproj
 tags*
 build/
 build-tests/
@@ -11,3 +12,5 @@ target/
 *.bootstrap.cache
 /bin/
 .cargo/
+packages/
+.DS_Store

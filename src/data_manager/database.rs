@@ -21,11 +21,7 @@ use cbor;
 use rustc_serialize::Encodable;
 use std::collections::HashMap;
 
-use routing::NameType;
-use routing::node_interface::MethodCall;
-use routing::sendable::Sendable;
-use routing::types::GROUP_SIZE;
-
+use routing_types::*;
 use transfer_parser::transfer_tags::DATA_MANAGER_ACCOUNT_TAG;
 
 type Identity = NameType; // name of the chunk
@@ -78,9 +74,10 @@ impl Sendable for DataManagerSendable {
         if self.has_preserialised_content {
             self.preserialised_content.clone()
         } else {
-            let mut e = cbor::Encoder::from_memory();
-            e.encode(&[&self]).unwrap();
-            e.into_bytes()
+            match ::routing::utils::encode(&self) {
+                Ok(result) => result,
+                Err(_) => Vec::new()
+            }
         }
     }
 
@@ -89,32 +86,25 @@ impl Sendable for DataManagerSendable {
     }
 
     fn merge(&self, responses: Vec<Box<Sendable>>) -> Option<Box<Sendable>> {
-        if responses.len() == GROUP_SIZE - 1 {
-            return None;
-        }
-        let mut tmp_wrapper: DataManagerSendable;
         let mut stats = Vec::<(PmidNodes, u64)>::new();
         for it in responses.iter() {
-            let mut d = cbor::Decoder::from_bytes(it.serialised_contents());
-            tmp_wrapper = d.decode().next().unwrap().unwrap();
-            let mut push_in_vec = false;
-            {
-                let find_res = stats.iter_mut().find(|a| a.0 == tmp_wrapper.get_data_holders());
-                if find_res.is_some() {
-                    find_res.unwrap().1 += 1
-                } else {
-                    push_in_vec = true;
-                }
-            }
-
+            let wrapper =
+                match ::routing::utils::decode::<DataManagerSendable>(&it.serialised_contents()) {
+                    Ok(result) => result,
+                    Err(_) => { continue }
+                };
+            let push_in_vec = match stats.iter_mut().find(|a| a.0 == wrapper.get_data_holders()) {
+                    Some(find_res) => { find_res.1 += 1; false }
+                    None => { true }
+                };
             if push_in_vec {
-                stats.push((tmp_wrapper.get_data_holders(), 1));
+                stats.push((wrapper.get_data_holders(), 1));
             }
         }
         stats.sort_by(|a, b| b.1.cmp(&a.1));
         let (pmids, count) = stats[0].clone();
-        if count < (GROUP_SIZE as u64 + 1) / 2 {
-            return Some(Box::new(DataManagerSendable::new(NameType([0u8;64]), pmids)));
+        if count >= (GROUP_SIZE as u64 + 1) / 2 {
+            return Some(Box::new(DataManagerSendable::new(self.name.clone(), pmids)));
         }
         None
     }
@@ -124,9 +114,9 @@ impl Sendable for DataManagerSendable {
 
 
 pub struct DataManagerDatabase {
-  storage : HashMap<Identity, PmidNodes>,
-  pub close_grp_from_churn: Vec<NameType>,
-  pub temp_storage_after_churn: HashMap<NameType, PmidNodes>,
+    storage : HashMap<Identity, PmidNodes>,
+    pub close_grp_from_churn: Vec<NameType>,
+    pub temp_storage_after_churn: HashMap<NameType, PmidNodes>,
 }
 
 impl DataManagerDatabase {
@@ -143,7 +133,7 @@ impl DataManagerDatabase {
     }
 
     pub fn put_pmid_nodes(&mut self, name : &Identity, pmid_nodes: PmidNodes) {
-        self.storage.entry(name.clone()).or_insert(pmid_nodes.clone());
+        let _ = self.storage.entry(name.clone()).or_insert(pmid_nodes.clone());
     }
 
     pub fn add_pmid_node(&mut self, name : &Identity, pmid_node: PmidNode) {
@@ -160,18 +150,16 @@ impl DataManagerDatabase {
         let nodes = self.storage.entry(name.clone()).or_insert(vec![]);
         for i in 0..nodes.len() {
             if nodes[i] == pmid_node {
-              nodes.remove(i);
+              let _ = nodes.remove(i);
               break;
             }
         }
     }
 
     pub fn get_pmid_nodes(&mut self, name : &Identity) -> PmidNodes {
-        let entry = self.storage.get(&name);
-        if entry.is_some() {
-            entry.unwrap().clone()
-        } else {
-            Vec::<PmidNode>::new()
+        match self.storage.get(&name) {
+            Some(entry) => entry.clone(),
+            None => Vec::<PmidNode>::new()
         }
     }
 
@@ -179,39 +167,30 @@ impl DataManagerDatabase {
     pub fn handle_account_transfer(&mut self, account_wrapper : &DataManagerSendable) {
         // TODO: Assuming the incoming merged account entry has the priority and shall also be trusted first
         let _ = self.storage.remove(&account_wrapper.name());
-        self.storage.insert(account_wrapper.name(), account_wrapper.get_data_holders());
+        let _ = self.storage.insert(account_wrapper.name(), account_wrapper.get_data_holders());
+        info!("DataManager updated account {:?} to {:?}",
+              account_wrapper.name(), account_wrapper.get_data_holders());
     }
 
-    pub fn retrieve_all_and_reset(&mut self, close_group: &mut Vec<NameType>) -> Vec<MethodCall> {
+    pub fn retrieve_all_and_reset(&mut self, _close_group: &mut Vec<NameType>) -> Vec<MethodCall> {
         self.temp_storage_after_churn = self.storage.clone();
-        let mut close_grp_already_stored = false;
-
-        for it in self.storage.iter_mut() {
-            let mut new_pmid_nodes = Vec::<NameType>::with_capacity(it.1.len());
-            for vec_it in it.1.iter() {
-                if close_group.iter().find(|a| **a == *vec_it).is_some() {
-                    new_pmid_nodes.push(vec_it.clone());
-                }
-            }
-
-            if new_pmid_nodes.len() < 3 && !close_grp_already_stored {
-                self.close_grp_from_churn = close_group.clone();
-                close_grp_already_stored = true;
-            }
-            *it.1 = new_pmid_nodes;
-        }
-
         let mut actions = Vec::<MethodCall>::new();
         for (key, value) in self.storage.iter() {
-            if self.temp_storage_after_churn.get(key).unwrap().len() < 3 {
-                actions.push(MethodCall::Get {
-                    type_id: DATA_MANAGER_ACCOUNT_TAG,
-                    name: (*key).clone(),
-                });
+            if value.len() < 3 {
+                for pmid_node in value.iter() {
+                    info!("DataManager sends out a Get request in churn, fetching data {:?} from pmid_node {:?}",
+                          *key, pmid_node);
+                    actions.push(MethodCall::Get {
+                        location: Authority::ManagedNode(pmid_node.clone()),
+                        // DataManager only handles ImmutableData
+                        data_request: DataRequest::ImmutableData((*key).clone(), ImmutableDataType::Normal)
+                    });
+                }
             }
             let data_manager_sendable = DataManagerSendable::new((*key).clone(), (*value).clone());
             let mut encoder = cbor::Encoder::from_memory();
             if encoder.encode(&[data_manager_sendable.clone()]).is_ok() {
+                debug!("DataManager sends out a refresh regarding account {:?}", data_manager_sendable.name());
                 actions.push(MethodCall::Refresh {
                     type_tag: DATA_MANAGER_ACCOUNT_TAG,
                     from_group: data_manager_sendable.name(),
@@ -220,6 +199,7 @@ impl DataManagerDatabase {
             }
         }
         self.storage.clear();
+        debug!("DataManager storage cleaned in churn with actions.len() = {:?}", actions.len());
         actions
     }
 }
@@ -227,21 +207,17 @@ impl DataManagerDatabase {
 #[cfg(test)]
 mod test {
   use super::*;
-  use maidsafe_types::ImmutableData;
-  use routing::NameType;
-  use routing::types::generate_random_vec_u8;
-  use routing::test_utils::Random;
-  use routing::sendable::Sendable;
+  use routing_types::*;
 
   #[test]
   fn exist() {
     let mut db = DataManagerDatabase::new();
     let value = generate_random_vec_u8(1024);
-    let data = ImmutableData::new(value);
+    let data = ImmutableData::new(ImmutableDataType::Normal, value);
     let mut pmid_nodes : Vec<NameType> = vec![];
 
     for _ in 0..4 {
-      pmid_nodes.push(Random::generate_random());
+      pmid_nodes.push(NameType(vector_as_u8_64_array(generate_random_vec_u8(64))));
     }
 
     let data_name = data.name();
@@ -254,12 +230,12 @@ mod test {
   fn put() {
     let mut db = DataManagerDatabase::new();
     let value = generate_random_vec_u8(1024);
-    let data = ImmutableData::new(value);
+    let data = ImmutableData::new(ImmutableDataType::Normal, value);
     let data_name = data.name();
     let mut pmid_nodes : Vec<NameType> = vec![];
 
     for _ in 0..4 {
-      pmid_nodes.push(Random::generate_random());
+      pmid_nodes.push(NameType(vector_as_u8_64_array(generate_random_vec_u8(64))));
     }
 
     let result = db.get_pmid_nodes(&data_name);
@@ -275,12 +251,12 @@ mod test {
   fn remove_pmid() {
     let mut db = DataManagerDatabase::new();
     let value = generate_random_vec_u8(1024);
-    let data = ImmutableData::new(value);
+    let data = ImmutableData::new(ImmutableDataType::Normal, value);
     let data_name = data.name();
     let mut pmid_nodes : Vec<NameType> = vec![];
 
     for _ in 0..4 {
-      pmid_nodes.push(Random::generate_random());
+      pmid_nodes.push(NameType(vector_as_u8_64_array(generate_random_vec_u8(64))));
     }
 
     db.put_pmid_nodes(&data_name, pmid_nodes.clone());
@@ -300,14 +276,14 @@ mod test {
   fn replace_pmids() {
     let mut db = DataManagerDatabase::new();
     let value = generate_random_vec_u8(1024);
-    let data = ImmutableData::new(value);
+    let data = ImmutableData::new(ImmutableDataType::Normal, value);
     let data_name = data.name();
     let mut pmid_nodes : Vec<NameType> = vec![];
     let mut new_pmid_nodes : Vec<NameType> = vec![];
 
     for _ in 0..4 {
-      pmid_nodes.push(Random::generate_random());
-      new_pmid_nodes.push(Random::generate_random());
+      pmid_nodes.push(NameType(vector_as_u8_64_array(generate_random_vec_u8(64))));
+      new_pmid_nodes.push(NameType(vector_as_u8_64_array(generate_random_vec_u8(64))));
     }
 
     db.put_pmid_nodes(&data_name, pmid_nodes.clone());
@@ -329,12 +305,12 @@ mod test {
   fn handle_account_transfer() {
     let mut db = DataManagerDatabase::new();
     let value = generate_random_vec_u8(1024);
-    let data = ImmutableData::new(value);
+    let data = ImmutableData::new(ImmutableDataType::Normal, value);
     let data_name = data.name();
     let mut pmid_nodes : Vec<NameType> = vec![];
 
     for _ in 0..4 {
-      pmid_nodes.push(Random::generate_random());
+      pmid_nodes.push(NameType(vector_as_u8_64_array(generate_random_vec_u8(64))));
     }
     db.put_pmid_nodes(&data_name, pmid_nodes.clone());
     assert_eq!(db.get_pmid_nodes(&data_name).len(), pmid_nodes.len());

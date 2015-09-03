@@ -19,15 +19,7 @@
 
 mod database;
 
-use cbor::Decoder;
-
-use routing::error::{ResponseError, InterfaceError};
-use routing::NameType;
-use routing::node_interface::MethodCall;
-use routing::sendable::Sendable;
-use routing::types::{MessageAction, DestinationAddress};
-
-use data_parser::Data;
+use routing_types::*;
 
 pub use self::database::{PmidManagerAccountWrapper, PmidManagerAccount};
 
@@ -42,43 +34,31 @@ impl PmidManager {
         }
     }
 
-    pub fn handle_put(&mut self, dest_address: &DestinationAddress,
-                      data: &Vec<u8>) ->Result<MessageAction, InterfaceError> {
-        if self.db_.put_data(&dest_address.dest, data.len() as u64) {
-            let mut destinations : Vec<NameType> = Vec::new();
-            destinations.push(dest_address.dest.clone());
-            Ok(MessageAction::SendOn(destinations))
+    pub fn handle_put(&mut self, pmid_node: NameType, data: Data) -> Vec<MethodCall> {
+        if self.db_.put_data(&pmid_node, data.payload_size() as u64) {
+            vec![MethodCall::Put { location: Authority::ManagedNode(pmid_node.clone()),
+                                   content: data }]
         } else {
-            Err(From::from(ResponseError::InvalidRequest))
+            vec![]
         }
     }
 
     pub fn handle_put_response(&mut self, from_address: &NameType,
-                               response: &Result<Vec<u8>, ResponseError>) -> MethodCall {
-        // TODO: here the assumption is pmid_node's routing will send back the whole original
-        //       payload data, when the return from pmid_node->handle_put() is Err(InvalidRequest).
-        //       The content in response is payload for the failing to store data or the removed
-        //       Sacrificial copy.
-        if response.is_err() {
-            return MethodCall::None;
+                               response: ResponseError) -> Vec<MethodCall> {
+        match response {
+            ResponseError::FailedRequestForData(data) => {
+                self.db_.delete_data(from_address, data.payload_size() as u64);
+                return vec![MethodCall::FailedPut { location: Authority::NaeManager(data.name()),
+                                                    data: data }];
+            },
+            ResponseError::HadToClearSacrificial(name, size) => {
+                self.db_.delete_data(from_address, size as u64);
+                return vec![MethodCall::ClearSacrificial {
+                    location: Authority::NaeManager(name), name: name, size: size }];
+            },
+            _ => {}
         }
-
-        let data = response.clone().unwrap();
-        self.db_.delete_data(from_address, data.len() as u64);
-
-        let mut decoder = Decoder::from_bytes(&data[..]);
-        if let Some(parsed_data) = decoder.decode().next().and_then(|result| result.ok()) {
-            match parsed_data {
-                Data::Immutable(parsed) => return MethodCall::SendOn { destination: parsed.name() },
-                Data::ImmutableBackup(parsed) =>
-                    return MethodCall::SendOn { destination: parsed.name() },
-                Data::ImmutableSacrificial(parsed) =>
-                    return MethodCall::SendOn { destination: parsed.name() },
-                _ => return MethodCall::None,
-            }
-        }
-
-        MethodCall::None
+        vec![]
     }
 
     pub fn handle_account_transfer(&mut self, merged_account: PmidManagerAccountWrapper) {
@@ -92,34 +72,32 @@ impl PmidManager {
 
 #[cfg(test)]
 mod test {
-  use routing;
-  use super::PmidManager;
-  use maidsafe_types::*;
-  use routing::types::*;
-  use routing::sendable::Sendable;
   use super::database::{PmidManagerAccount, PmidManagerAccountWrapper};
+  use super::PmidManager;
+
+  use routing_types::*;
 
   #[test]
   fn handle_put() {
     let mut pmid_manager = PmidManager::new();
-    let dest = DestinationAddress { dest: routing::test_utils::Random::generate_random(), relay_to: None };
+    let dest = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
     let value = generate_random_vec_u8(1024);
-    let data = ImmutableData::new(value);
-    let put_result = pmid_manager.handle_put(&dest, &data.serialised_contents());
-    assert_eq!(put_result.is_err(), false);
-    match put_result.ok().unwrap() {
-      MessageAction::SendOn(ref x) => {
-        assert_eq!(x.len(), 1);
-        assert_eq!(x[0], dest.dest);
-      }
-      MessageAction::Reply(_) => panic!("Unexpected"),
+    let data = ImmutableData::new(ImmutableDataType::Normal, value);
+    let put_result = pmid_manager.handle_put(dest, Data::ImmutableData(data.clone()));
+    assert_eq!(put_result.len(), 1);
+    match put_result[0].clone() {
+        MethodCall::Put { location, content } => {
+            assert_eq!(location, Authority::ManagedNode(dest));
+            assert_eq!(content, Data::ImmutableData(data.clone()));
+        }
+        _ => panic!("Unexpected"),
     }
   }
 
     #[test]
     fn handle_account_transfer() {
         let mut pmid_manager = PmidManager::new();
-        let name : routing::NameType = routing::test_utils::Random::generate_random();
+        let name = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         let account_wrapper = PmidManagerAccountWrapper::new(name.clone(), PmidManagerAccount::new());
         pmid_manager.handle_account_transfer(account_wrapper);
         assert_eq!(pmid_manager.db_.exist(&name), true);

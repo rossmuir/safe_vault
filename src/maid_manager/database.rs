@@ -18,16 +18,12 @@
 #![allow(dead_code)]
 
 use cbor;
-use rustc_serialize::{Decodable, Decoder, Encodable, Encoder};
+use rustc_serialize::{Decoder, Encodable, Encoder};
 use std::collections;
 
-use routing::NameType;
-use routing::node_interface::MethodCall;
-use routing::sendable::Sendable;
-use routing::types::GROUP_SIZE;
-
+use routing_types::*;
 use transfer_parser::transfer_tags::MAID_MANAGER_ACCOUNT_TAG;
-use utils::median;
+use utils;
 
 type Identity = NameType; // maid node address
 
@@ -68,9 +64,10 @@ impl Sendable for MaidManagerAccountWrapper {
     }
 
     fn serialised_contents(&self) -> Vec<u8> {
-        let mut e = cbor::Encoder::from_memory();
-        e.encode(&[&self]).unwrap();
-        e.into_bytes()
+        match ::routing::utils::encode(&self) {
+            Ok(result) => result,
+            Err(_) => Vec::new()
+        }
     }
 
     fn refresh(&self)->bool {
@@ -78,20 +75,20 @@ impl Sendable for MaidManagerAccountWrapper {
     }
 
     fn merge(&self, responses: Vec<Box<Sendable>>) -> Option<Box<Sendable>> {
-        let mut tmp_wrapper: MaidManagerAccountWrapper;
         let mut data_stored: Vec<u64> = Vec::new();
         let mut space_available: Vec<u64> = Vec::new();
         for value in responses {
-            let mut d = cbor::Decoder::from_bytes(value.serialised_contents());
-            tmp_wrapper = d.decode().next().unwrap().unwrap();
-            data_stored.push(tmp_wrapper.get_account().get_data_stored());
-            space_available.push(tmp_wrapper.get_account().get_available_space());
+            let wrapper = match ::routing::utils::decode::<MaidManagerAccountWrapper>(
+                &value.serialised_contents()) {
+                    Ok(result) => result,
+                    Err(_) => { continue }
+                };
+            data_stored.push(wrapper.get_account().get_data_stored());
+            space_available.push(wrapper.get_account().get_available_space());
         }
-        assert!(data_stored.len() < (GROUP_SIZE + 1) / 2);
-
-        Some(Box::new(MaidManagerAccountWrapper::new(NameType([0u8;64]), MaidManagerAccount {
-            data_stored : median(data_stored),
-            space_available: median(space_available)
+        Some(Box::new(MaidManagerAccountWrapper::new(self.name.clone(), MaidManagerAccount {
+            data_stored: utils::median(data_stored),
+            space_available: utils::median(space_available)
         })))
     }
 }
@@ -149,28 +146,30 @@ impl MaidManagerAccount {
 
 
 pub struct MaidManagerDatabase {
-  storage: collections::HashMap<Identity, MaidManagerAccount>,
+    storage: collections::HashMap<Identity, MaidManagerAccount>,
 }
 
 impl MaidManagerDatabase {
-  pub fn new () -> MaidManagerDatabase {
-      MaidManagerDatabase { storage: collections::HashMap::with_capacity(10000), }
-  }
+    pub fn new () -> MaidManagerDatabase {
+        MaidManagerDatabase { storage: collections::HashMap::with_capacity(10000), }
+    }
 
-  pub fn exist(&mut self, name : &Identity) -> bool {
-      self.storage.contains_key(name)
-  }
+    pub fn exist(&mut self, name : &Identity) -> bool {
+        self.storage.contains_key(name)
+    }
 
-  pub fn put_data(&mut self, name: &Identity, size: u64) -> bool {
-      let entry = self.storage.entry(name.clone()).or_insert(MaidManagerAccount::new());
-      entry.put_data(size)
-  }
+    pub fn put_data(&mut self, name: &Identity, size: u64) -> bool {
+        let entry = self.storage.entry(name.clone()).or_insert(MaidManagerAccount::new());
+        entry.put_data(size)
+    }
 
-  pub fn handle_account_transfer(&mut self, account_wrapper : &MaidManagerAccountWrapper) {
-      // TODO: Assuming the incoming merged account entry has the priority and shall also be trusted first
-      let _ = self.storage.remove(&account_wrapper.name());
-      self.storage.insert(account_wrapper.name(), account_wrapper.get_account());
-  }
+    pub fn handle_account_transfer(&mut self, account_wrapper : &MaidManagerAccountWrapper) {
+        // TODO: Assuming the incoming merged account entry has the priority and shall also be trusted first
+        let _ = self.storage.remove(&account_wrapper.name());
+        let _ = self.storage.insert(account_wrapper.name(), account_wrapper.get_account());
+        info!("MaidManager updated account {:?} to {:?}",
+              account_wrapper.name(), account_wrapper.get_account());
+    }
 
     pub fn retrieve_all_and_reset(&mut self) -> Vec<MethodCall> {
         let mut actions = Vec::with_capacity(self.storage.len());
@@ -189,25 +188,27 @@ impl MaidManagerDatabase {
         actions
     }
 
-  pub fn delete_data(&mut self, name : &Identity, size: u64) {
-      match self.storage.get_mut(name) {
-          Some(value) => value.delete_data(size),
-          None => (),
-      }
-  }
+    pub fn delete_data(&mut self, name : &Identity, size: u64) {
+        match self.storage.get_mut(name) {
+            Some(value) => value.delete_data(size),
+            None => (),
+        }
+    }
 }
 
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use routing;
     use cbor;
+
+    use super::*;
+
+    use routing_types::*;
 
     #[test]
     fn exist() {
         let mut db = MaidManagerDatabase::new();
-        let name = routing::test_utils::Random::generate_random();
+        let name = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         assert_eq!(db.exist(&name), false);
         db.put_data(&name, 1024);
         assert_eq!(db.exist(&name), true);
@@ -216,7 +217,7 @@ mod test {
     #[test]
     fn put_data() {
         let mut db = MaidManagerDatabase::new();
-        let name = routing::test_utils::Random::generate_random();
+        let name = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         assert_eq!(db.put_data(&name, 0), true);
         assert_eq!(db.put_data(&name, 1), true);
         assert_eq!(db.put_data(&name, 1073741823), true);
@@ -230,7 +231,7 @@ mod test {
     #[test]
     fn delete_data() {
         let mut db = MaidManagerDatabase::new();
-        let name = routing::test_utils::Random::generate_random();
+        let name = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         db.delete_data(&name, 0);
         assert_eq!(db.exist(&name), false);
         assert_eq!(db.put_data(&name, 0), true);
@@ -251,7 +252,7 @@ mod test {
     #[test]
     fn handle_account_transfer() {
         let mut db = MaidManagerDatabase::new();
-        let name = routing::test_utils::Random::generate_random();
+        let name = NameType(vector_as_u8_64_array(generate_random_vec_u8(64)));
         assert_eq!(db.put_data(&name, 0), true);
         assert_eq!(db.put_data(&name, 1073741823), true);
         assert_eq!(db.put_data(&name, 2), false);
@@ -276,7 +277,7 @@ mod test {
 
     #[test]
     fn maid_manager_account_wrapper_serialisation() {
-        let obj_before = MaidManagerAccountWrapper::new(routing::NameType([1u8;64]), MaidManagerAccount::new());
+        let obj_before = MaidManagerAccountWrapper::new(NameType([1u8;64]), MaidManagerAccount::new());
 
         let mut e = cbor::Encoder::from_memory();
         e.encode(&[&obj_before]).unwrap();

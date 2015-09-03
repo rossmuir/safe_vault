@@ -1,17 +1,17 @@
-# maidsafe_vault
+# safe_vault
 
-[![](https://img.shields.io/badge/Project%20SAFE-Approved-green.svg)](http://maidsafe.net/applications) [![](https://img.shields.io/badge/License-GPL3-green.svg)](https://github.com/maidsafe/maidsafe_vault/blob/master/COPYING)
+[![](https://img.shields.io/badge/Project%20SAFE-Approved-green.svg)](http://maidsafe.net/applications) [![](https://img.shields.io/badge/License-GPL3-green.svg)](https://github.com/maidsafe/safe_vault/blob/master/COPYING)
 
 **Primary Maintainer:**     Qi Ma (qi.ma@maidsafe.net)
 
-**Secondary Maintainer:**   Chandra Prakash (prakash@maidsafe.net)
+**Secondary Maintainer:**   Fraser Hutchison (fraser.hutchison@maidsafe.net)
 
-|Crate|Linux|Windows|OSX|Coverage|Issues|
-|:------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-|[![](http://meritbadge.herokuapp.com/maidsafe_vault)](https://crates.io/crates/maidsafe_vault)|[![Build Status](https://travis-ci.org/maidsafe/maidsafe_vault.svg?branch=master)](https://travis-ci.org/maidsafe/maidsafe_vault) | [![Build Status](http://ci.maidsafe.net:8080/buildStatus/icon?job=maidsafe_vault_win64_status_badge)](http://ci.maidsafe.net:8080/job/maidsafe_vault_win64_status_badge/)|[![Build Status](http://ci.maidsafe.net:8080/buildStatus/icon?job=maidsafe_vault_osx_status_badge)](http://ci.maidsafe.net:8080/job/maidsafe_vault_osx_status_badge/) |[![Coverage Status](https://coveralls.io/repos/maidsafe/maidsafe_vault/badge.svg)](https://coveralls.io/r/maidsafe/maidsafe_vault)|[![Stories in Ready](https://badge.waffle.io/maidsafe/maidsafe_vault.png?label=ready&title=Ready)](https://waffle.io/maidsafe/maidsafe_vault)|
+|Crate|Linux/OS X|ARM (Linux)|Windows|Coverage|Issues|
+|:---:|:--------:|:---------:|:-----:|:------:|:----:|
+|[![](http://meritbadge.herokuapp.com/safe_vault)](https://crates.io/crates/safe_vault)|[![Build Status](https://travis-ci.org/maidsafe/safe_vault.svg?branch=master)](https://travis-ci.org/maidsafe/safe_vault)|[![Build Status](http://ci.maidsafe.net:8080/buildStatus/icon?job=safe_vault_arm_status_badge)](http://ci.maidsafe.net:8080/job/safe_vault_arm_status_badge/)|[![Build status](https://ci.appveyor.com/api/projects/status/ohu678c6ufw8b2bn/branch/master?svg=true)](https://ci.appveyor.com/project/MaidSafe-QA/safe-vault/branch/master)|[![Coverage Status](https://coveralls.io/repos/maidsafe/safe_vault/badge.svg)](https://coveralls.io/r/maidsafe/safe_vault)|[![Stories in Ready](https://badge.waffle.io/maidsafe/safe_vault.png?label=ready&title=Ready)](https://waffle.io/maidsafe/safe_vault)|
 
 
-| [API Documentation - master branch ](http://maidsafe.net/maidsafe_vault/master) | [SAFE Network System Documention](http://systemdocs.maidsafe.net) | [MaidSafe website](http://maidsafe.net) | [Safe Community site](https://forum.safenetwork.io) |
+| [API Documentation - master branch ](http://maidsafe.net/safe_vault/master) | [SAFE Network System Documention](http://systemdocs.maidsafe.net) | [MaidSafe website](http://maidsafe.net) | [Safe Community site](https://forum.safenetwork.io) |
 |:------:|:-------:|:-------:|:-------:|
 
 #Overview
@@ -21,20 +21,19 @@ An autonomous network capable of data storage/publishing/sharing as well as comp
 
 #Todo Items
 
-## [0.1.2] - code clean up
-- [ ] [MAID 1185](https://maidsafe.atlassian.net/browse/MAID-1185) using unwrap unsafely
+## [0.1.6]
+- [x] Default to use real Routing rather than the mock
+- [x] Updated config file to match Crust changes
+- [x] Refactored flow for put_response
+- [x] Added churn tests
+- [x] Refactored returns from most persona functions to not use Result
 
-## [0.1.3] - integration test with client having churn event
+## [0.1.7]
 - [ ] [MAID-1017](https://maidsafe.atlassian.net/browse/MAID-1017) churn (account transfer when nodes join or leave)
 
-## [0.1.4] - persona update
-- [ ] [MAID-1186](https://maidsafe.atlassian.net/browse/MAID-1186) Handling of unified Structrued Data
-    - [ ] [MAID-1187](https://maidsafe.atlassian.net/browse/MAID-1187) Updating Version Handler
-    - [ ] [MAID-1188](https://maidsafe.atlassian.net/browse/MAID-1188) Updating other personas if required
+## [0.1.8]
 - [ ] [MAID-1189](https://maidsafe.atlassian.net/browse/MAID-1189) Proper PmidNode Initialisation (max diskspace)
-
-## [0.1.5] - account creation
-- [ ] [MAID-1190](https://maidsafe.atlassian.net/browse/MAID-1190) Proper MaidManager account entry creation (allownance)
+- [ ] [MAID-1190](https://maidsafe.atlassian.net/browse/MAID-1190) Proper MaidManager account entry creation (allowance)
 - [ ] [MAID-1191](https://maidsafe.atlassian.net/browse/MAID-1191) Proper PmidManager account entry creation (pmidnode diskspace info)
 
 ## [0.2.0] - messaging
@@ -57,9 +56,9 @@ An autonomous network capable of data storage/publishing/sharing as well as comp
 #Detailed documentation
 
 ### Overview
-The MaidSafe Network consists of software processes (nodes), referred to as vaults. These vaults perform many functions on the network and these functional components are referred to as personas. The underlying network, when linked with [routing](https://github.com/dirvine/routing), is an XOR network and as such a node may express closeness or responsibility to any other node or element on the network, if the node is in relative close proximity to the target. In this summary the phrase **NAE** (Network Addressable Element) is used to refer to anything with a network address including data.
+The MaidSafe Network consists of software processes (nodes), referred to as vaults. These vaults perform many functions on the network and these functional components are referred to as personas. The underlying network, when linked with [routing](https://github.com/maidsafe/routing), is an XOR network and as such a node may express closeness or responsibility to any other node or element on the network, if the node is in relative close proximity to the target. In this summary the phrase **NAE** (Network Addressable Element) is used to refer to anything with a network address including data.
 
-The vaults rely on [routing](https://github.com/dirvine/routing) to calculate responsibilities for NAE via the relevant [API calls](http://dirvine.github.io/routing/routing/).
+The vaults rely on [routing](https://github.com/maidsafe/routing) to calculate responsibilities for NAE via the relevant [API calls](http://maidsafe.net/routing/master/routing/index.html/).
 
 These calls allow us to calculate the network from the perspective of any NAE we may be responsible for. It cannot be stressed enough that the ONLY way to determine responsibility for an NAE is to see the network from the perspective on the NAE. If we sort the vector of nodes we know about and their close nodes (referred to as the group matrix) and we do not appear in the first K (replication count) nodes then we are not responsible for the NAE. This is a fundamental issue and the importance of this cannot be emphasised enough.
 
