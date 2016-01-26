@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/sodiumoxide-0.0.8/src/crypto/stream/stream_macros.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/sodiumoxide-0.0.9/src/crypto/stream/stream_macros.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>stream_macros.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -233,6 +234,9 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
 </pre><pre class='rust '>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>stream_module</span> ((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>stream_name</span>:<span class='ident'>ident</span>,
                              <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>xor_name</span>:<span class='ident'>ident</span>,
@@ -244,7 +248,10 @@
 <span class='kw'>use</span> <span class='ident'>randombytes</span>::<span class='ident'>randombytes_into</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
 
+<span class='doccomment'>/// Number of bytes in a `Key`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>keybytes</span>;
+
+<span class='doccomment'>/// Number of bytes in a `Nonce`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NONCEBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>noncebytes</span>;
 
 <span class='doccomment'>/// `Key` for symmetric encryption</span>
@@ -487,6 +494,6 @@
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

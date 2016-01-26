@@ -9,6 +9,7 @@
 
     <title>main.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
@@ -111,14 +112,6 @@
 <span id="69">69</span>
 <span id="70">70</span>
 <span id="71">71</span>
-<span id="72">72</span>
-<span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
-<span id="76">76</span>
-<span id="77">77</span>
-<span id="78">78</span>
-<span id="79">79</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -151,53 +144,45 @@
           <span class='ident'>unknown_crate_types</span>, <span class='ident'>warnings</span>)]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>deprecated</span>, <span class='ident'>drop_with_repr_extern</span>, <span class='ident'>improper_ctypes</span>, <span class='ident'>missing_docs</span>,
         <span class='ident'>non_shorthand_field_patterns</span>, <span class='ident'>overflowing_literals</span>, <span class='ident'>plugin_as_library</span>,
-        <span class='ident'>private_no_mangle_fns</span>, <span class='ident'>private_no_mangle_statics</span>, <span class='ident'>raw_pointer_derive</span>, <span class='ident'>stable_features</span>,
-        <span class='ident'>unconditional_recursion</span>, <span class='ident'>unknown_lints</span>, <span class='ident'>unsafe_code</span>, <span class='ident'>unused</span>, <span class='ident'>unused_allocation</span>,
-        <span class='ident'>unused_attributes</span>, <span class='ident'>unused_comparisons</span>, <span class='ident'>unused_features</span>, <span class='ident'>unused_parens</span>, <span class='ident'>while_true</span>)]</span>
+        <span class='ident'>private_no_mangle_fns</span>, <span class='ident'>private_no_mangle_statics</span>, <span class='ident'>stable_features</span>, <span class='ident'>unconditional_recursion</span>,
+        <span class='ident'>unknown_lints</span>, <span class='ident'>unsafe_code</span>, <span class='ident'>unused</span>, <span class='ident'>unused_allocation</span>, <span class='ident'>unused_attributes</span>,
+        <span class='ident'>unused_comparisons</span>, <span class='ident'>unused_features</span>, <span class='ident'>unused_parens</span>, <span class='ident'>while_true</span>)]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>trivial_casts</span>, <span class='ident'>trivial_numeric_casts</span>, <span class='ident'>unused_extern_crates</span>, <span class='ident'>unused_import_braces</span>,
-        <span class='ident'>unused_qualifications</span>, <span class='ident'>unused_results</span>, <span class='ident'>variant_size_differences</span>)]</span>
+        <span class='ident'>unused_qualifications</span>, <span class='ident'>unused_results</span>)]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>box_pointers</span>, <span class='ident'>fat_ptr_transmutes</span>, <span class='ident'>missing_copy_implementations</span>,
-         <span class='ident'>missing_debug_implementations</span>)]</span>
+         <span class='ident'>missing_debug_implementations</span>, <span class='ident'>variant_size_differences</span>)]</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>env_logger</span>;
-
-<span class='comment'>// Non-MaidSafe crates</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>cbor</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>sodiumoxide</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>tempdir</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>maidsafe_utilities</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chunk_store</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>crust</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ctrlc</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>kademlia_routing_table</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lru_time_cache</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
-
-<span class='comment'>// MaidSafe crates</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>crust</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lru_time_cache</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>routing</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>sodiumoxide</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>xor_name</span>;
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>macros</span>;
-
-<span class='kw'>mod</span> <span class='ident'>chunk_store</span>;
-<span class='kw'>mod</span> <span class='ident'>data_manager</span>;
+<span class='kw'>mod</span> <span class='ident'>default_chunk_store</span>;
 <span class='kw'>mod</span> <span class='ident'>error</span>;
-<span class='kw'>mod</span> <span class='ident'>maid_manager</span>;
 <span class='kw'>mod</span> <span class='ident'>mock_routing</span>;
-<span class='kw'>mod</span> <span class='ident'>pmid_manager</span>;
-<span class='kw'>mod</span> <span class='ident'>pmid_node</span>;
-<span class='kw'>mod</span> <span class='ident'>sd_manager</span>;
-<span class='kw'>mod</span> <span class='ident'>transfer_tag</span>;
+<span class='kw'>mod</span> <span class='ident'>personas</span>;
 <span class='kw'>mod</span> <span class='ident'>types</span>;
 <span class='kw'>mod</span> <span class='ident'>utils</span>;
 <span class='kw'>mod</span> <span class='ident'>vault</span>;
 
 <span class='doccomment'>/// Runs a SAFE Network vault.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>main</span>() {
-    ::<span class='ident'>utils</span>::<span class='ident'>initialise_logger</span>();
-    ::<span class='ident'>utils</span>::<span class='ident'>handle_version</span>();
-    ::<span class='ident'>vault</span>::<span class='ident'>Vault</span>::<span class='ident'>run</span>();
+    <span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span>::<span class='ident'>init</span>(<span class='boolval'>false</span>);
+    <span class='ident'>utils</span>::<span class='ident'>handle_version</span>();
+    <span class='ident'>vault</span>::<span class='ident'>Vault</span>::<span class='ident'>run</span>();
 }
 </pre>
 </section>
@@ -259,6 +244,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

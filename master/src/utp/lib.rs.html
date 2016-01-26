@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/temp_utp-0.6.16/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/temp_utp-0.7.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -106,21 +107,6 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
-<span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
-<span id="71">71</span>
-<span id="72">72</span>
-<span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
-<span id="76">76</span>
-<span id="77">77</span>
-<span id="78">78</span>
-<span id="79">79</span>
-<span id="80">80</span>
-<span id="81">81</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Implementation of the [Micro Transport Protocol][spec].</span>
 <span class='doccomment'>//!</span>
@@ -147,27 +133,18 @@
 <span class='doccomment'>//! extern crate utp;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! use utp::UtpStream;</span>
-<span class='doccomment'>//! use std::io::{Read, Write};</span>
+<span class='doccomment'>//! use std::io::Write;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! fn main() {</span>
 <span class='doccomment'>//!     // Connect to an hypothetical local server running on port 8080</span>
 <span class='doccomment'>//!     let addr = &quot;127.0.0.1:8080&quot;;</span>
-<span class='doccomment'>//!     let mut stream = match UtpStream::connect(addr) {</span>
-<span class='doccomment'>//!         Ok(stream) =&gt; stream,</span>
-<span class='doccomment'>//!         Err(e) =&gt; panic!(&quot;{}&quot;, e),</span>
-<span class='doccomment'>//!     };</span>
+<span class='doccomment'>//!     let mut stream = UtpStream::connect(addr).expect(&quot;Error connecting to remote peer&quot;);</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//!     // Send a string</span>
-<span class='doccomment'>//!     match stream.write(&quot;Hi there!&quot;.as_bytes()) {</span>
-<span class='doccomment'>//!         Ok(_) =&gt; (),</span>
-<span class='doccomment'>//!         Err(e) =&gt; println!(&quot;Write failed with {}&quot;, e)</span>
-<span class='doccomment'>//!     }</span>
+<span class='doccomment'>//!     stream.write(&quot;Hi there!&quot;.as_bytes()).expect(&quot;Write failed&quot;);</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//!     // Close the stream</span>
-<span class='doccomment'>//!     match stream.close() {</span>
-<span class='doccomment'>//!         Ok(()) =&gt; println!(&quot;Connection closed&quot;),</span>
-<span class='doccomment'>//!         Err(e) =&gt; println!(&quot;{}&quot;, e)</span>
-<span class='doccomment'>//!     }</span>
+<span class='doccomment'>//!     stream.close().expect(&quot;Error closing connection&quot;);</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
@@ -175,7 +152,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```no_run</span>
 <span class='doccomment'>//! # use utp::{UtpStream, UtpSocket};</span>
-<span class='doccomment'>//! let socket = UtpSocket::bind(&quot;0.0.0.0:0&quot;).unwrap();</span>
+<span class='doccomment'>//! let socket = UtpSocket::bind(&quot;0.0.0.0:0&quot;).expect(&quot;Error binding socket&quot;);</span>
 <span class='doccomment'>//! let stream: UtpStream = socket.into();</span>
 <span class='doccomment'>//! ```</span>
 
@@ -187,11 +164,6 @@
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>quickcheck</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nix</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
-
 <span class='comment'>// Public API</span>
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>socket</span>::<span class='ident'>UtpSocket</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>socket</span>::<span class='ident'>UtpListener</span>;
@@ -202,7 +174,6 @@
 <span class='kw'>mod</span> <span class='ident'>packet</span>;
 <span class='kw'>mod</span> <span class='ident'>socket</span>;
 <span class='kw'>mod</span> <span class='ident'>stream</span>;
-<span class='kw'>mod</span> <span class='ident'>with_read_timeout</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -263,6 +234,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

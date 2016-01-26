@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Accumulator","Accumulator for various message types"]]});
+initSidebarItems({"struct":[["Accumulator","Implementation of Accumulator."]]});

@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/sodiumoxide-0.0.8/src/crypto/box_/curve25519xsalsa20poly1305.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/sodiumoxide-0.0.9/src/crypto/box_/curve25519xsalsa20poly1305.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>curve25519xsalsa20poly1305.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -460,6 +461,14 @@
 <span id="418">418</span>
 <span id="419">419</span>
 <span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `crypto_box_curve25519xsalsa20poly1305` , a particular</span>
 <span class='doccomment'>//! combination of Curve25519, Salsa20, and Poly1305 specified in</span>
@@ -472,10 +481,18 @@
 <span class='kw'>use</span> <span class='ident'>randombytes</span>::<span class='ident'>randombytes_into</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
 
+<span class='doccomment'>/// Number of bytes in a `PublicKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PUBLICKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `SecretKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SECRETKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `Nonce`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NONCEBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_box_curve25519xsalsa20poly1305_NONCEBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `PrecomputedKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PRECOMPUTEDKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES</span>;
+
 <span class='kw'>const</span> <span class='ident'>ZEROBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_box_curve25519xsalsa20poly1305_ZEROBYTES</span>;
 <span class='kw'>const</span> <span class='ident'>BOXZEROBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES</span>;
 
@@ -941,6 +958,6 @@
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

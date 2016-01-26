@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/net2-0.2.16/src/tcp.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/net2-0.2.21/src/tcp.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>tcp.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     <link rel="shortcut icon" href="https://doc.rust-lang.org/favicon.ico">
@@ -204,10 +205,10 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>ToSocketAddrs</span>, <span class='ident'>TcpListener</span>, <span class='ident'>TcpStream</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>;
 
 <span class='kw'>use</span> <span class='ident'>IntoInner</span>;
 <span class='kw'>use</span> <span class='ident'>socket</span>::<span class='ident'>Socket</span>;
+<span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>c</span>;
 
 <span class='doccomment'>/// An &quot;in progress&quot; TCP socket which has not yet been connected or listened.</span>
 <span class='doccomment'>///</span>
@@ -223,7 +224,7 @@
     <span class='doccomment'>/// Note that passing other kinds of flags or arguments can be done through</span>
     <span class='doccomment'>/// the `FromRaw{Fd,Socket}` implementation.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_v4</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpBuilder</span><span class='op'>&gt;</span> {
-        <span class='ident'>Socket</span>::<span class='ident'>new</span>(<span class='ident'>libc</span>::<span class='ident'>AF_INET</span>, <span class='ident'>libc</span>::<span class='ident'>SOCK_STREAM</span>).<span class='ident'>map</span>(::<span class='ident'>FromInner</span>::<span class='ident'>from_inner</span>)
+        <span class='ident'>Socket</span>::<span class='ident'>new</span>(<span class='ident'>c</span>::<span class='ident'>AF_INET</span>, <span class='ident'>c</span>::<span class='ident'>SOCK_STREAM</span>).<span class='ident'>map</span>(::<span class='ident'>FromInner</span>::<span class='ident'>from_inner</span>)
     }
 
     <span class='doccomment'>/// Constructs a new TcpBuilder with the `AF_INET6` domain, the `SOCK_STREAM`</span>
@@ -232,7 +233,7 @@
     <span class='doccomment'>/// Note that passing other kinds of flags or arguments can be done through</span>
     <span class='doccomment'>/// the `FromRaw{Fd,Socket}` implementation.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_v6</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpBuilder</span><span class='op'>&gt;</span> {
-        <span class='ident'>Socket</span>::<span class='ident'>new</span>(<span class='ident'>libc</span>::<span class='ident'>AF_INET6</span>, <span class='ident'>libc</span>::<span class='ident'>SOCK_STREAM</span>).<span class='ident'>map</span>(::<span class='ident'>FromInner</span>::<span class='ident'>from_inner</span>)
+        <span class='ident'>Socket</span>::<span class='ident'>new</span>(<span class='ident'>c</span>::<span class='ident'>AF_INET6</span>, <span class='ident'>c</span>::<span class='ident'>SOCK_STREAM</span>).<span class='ident'>map</span>(::<span class='ident'>FromInner</span>::<span class='ident'>from_inner</span>)
     }
 
     <span class='doccomment'>/// Binds this socket to the specified address.</span>
@@ -399,6 +400,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

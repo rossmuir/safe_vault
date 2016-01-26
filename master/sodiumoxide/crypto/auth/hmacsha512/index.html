@@ -9,6 +9,7 @@
 
     <title>sodiumoxide::crypto::auth::hmacsha512 - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1413' class='srclink' href='../../../../src/sodiumoxide/crypto/auth/hmacsha512.rs.html#1-42' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1406' class='srclink' href='../../../../src/sodiumoxide/crypto/auth/hmacsha512.rs.html#1-81' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><code>HMAC-SHA-512</code> <code>HMAC-SHA-512</code> is conjectured to meet the standard notion of
 unforgeability.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -55,6 +56,15 @@ unforgeability.</p>
                                title='sodiumoxide::crypto::auth::hmacsha512::Key'>Key</a></td>
                         <td class='docblock short'>
                              <p>Authentication <code>Key</code></p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.State.html'
+                               title='sodiumoxide::crypto::auth::hmacsha512::State'>State</a></td>
+                        <td class='docblock short'>
+                             <p>Authentication <code>State</code></p>
 
                         </td>
                     </tr>
@@ -73,7 +83,8 @@ unforgeability.</p>
                         <td><a class='constant' href='constant.KEYBYTES.html'
                                title='sodiumoxide::crypto::auth::hmacsha512::KEYBYTES'>KEYBYTES</a></td>
                         <td class='docblock short'>
-                             
+                             <p>Number of bytes in a <code>Key</code>.</p>
+
                         </td>
                     </tr>
                 
@@ -81,7 +92,8 @@ unforgeability.</p>
                         <td><a class='constant' href='constant.TAGBYTES.html'
                                title='sodiumoxide::crypto::auth::hmacsha512::TAGBYTES'>TAGBYTES</a></td>
                         <td class='docblock short'>
-                             
+                             <p>Number of bytes in a <code>Tag</code>.</p>
+
                         </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -173,6 +185,6 @@ under a secret key <code>k</code>. Otherwise it returns false.</p>
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

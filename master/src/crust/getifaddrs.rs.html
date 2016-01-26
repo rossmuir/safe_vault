@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/crust-0.4.2/src/getifaddrs.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/crust-0.8.0/src/getifaddrs.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>getifaddrs.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
@@ -478,10 +479,6 @@
 <span id="436">436</span>
 <span id="437">437</span>
 <span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -500,7 +497,8 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>IpAddr</span>, <span class='ident'>Ipv4Addr</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Ipv4Addr</span>;
+<span class='kw'>use</span> <span class='ident'>ip</span>::<span class='ident'>IpAddr</span>;
 
 <span class='doccomment'>/// Details about an interface on this host</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>Clone</span>)]</span>
@@ -530,7 +528,8 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>windows</span>))]</span>
 <span class='kw'>mod</span> <span class='ident'>getifaddrs_posix</span> {
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>IfAddr</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>IpAddr</span>, <span class='ident'>Ipv4Addr</span>, <span class='ident'>Ipv6Addr</span>};
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>Ipv4Addr</span>, <span class='ident'>Ipv6Addr</span>};
+    <span class='kw'>use</span> <span class='ident'>ip</span>::<span class='ident'>IpAddr</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>mem</span>, <span class='ident'>str</span>};
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CStr</span>;
     <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>consts</span>::<span class='ident'>os</span>::<span class='ident'>bsd44</span>::{<span class='ident'>AF_INET</span>, <span class='ident'>AF_INET6</span>};
@@ -624,6 +623,8 @@
         <span class='ident'>ret</span>
     }
 }
+
+<span class='doccomment'>/// For non-Windows operating system, use this function to get address</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>windows</span>))]</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getifaddrs</span>() <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>IfAddr</span><span class='op'>&gt;</span> {
     <span class='ident'>getifaddrs_posix</span>::<span class='ident'>getifaddrs</span>()
@@ -632,7 +633,8 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>getifaddrs_windows</span> {
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>IfAddr</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>IpAddr</span>, <span class='ident'>Ipv4Addr</span>, <span class='ident'>Ipv6Addr</span>};
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>Ipv4Addr</span>, <span class='ident'>Ipv6Addr</span>};
+    <span class='kw'>use</span> <span class='ident'>ip</span>::<span class='ident'>IpAddr</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>str</span>, <span class='ident'>ptr</span>};
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CStr</span>;
     <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>types</span>::<span class='ident'>common</span>::<span class='ident'>c95</span>::<span class='ident'>c_void</span>;
@@ -644,57 +646,54 @@
     <span class='kw'>use</span> <span class='ident'>libc</span>;
 
     <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>bad_style</span>)]</span>
-    <span class='kw'>struct</span> <span class='ident'>SOCKET_ADDRESS</span> {
-        <span class='kw'>pub</span> <span class='ident'>lpSockaddr</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>sockaddr</span>,
-        <span class='kw'>pub</span> <span class='ident'>iSockaddrLength</span> : <span class='ident'>c_int</span>,
+    <span class='kw'>struct</span> <span class='ident'>SocketAddress</span> {
+        <span class='kw'>pub</span> <span class='ident'>lp_socket_address</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>sockaddr</span>,
+        <span class='kw'>pub</span> <span class='ident'>i_socket_address_length</span> : <span class='ident'>c_int</span>,
     }
     <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>bad_style</span>)]</span>
-    <span class='kw'>struct</span> <span class='ident'>IP_ADAPTER_UNICAST_ADDRESS</span> {
-        <span class='kw'>pub</span> <span class='ident'>Length</span> : <span class='ident'>c_ulong</span>,
-        <span class='kw'>pub</span> <span class='ident'>Flags</span> : <span class='ident'>DWORD</span>,
-        <span class='kw'>pub</span> <span class='ident'>Next</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_UNICAST_ADDRESS</span>,
-        <span class='kw'>pub</span> <span class='ident'>Address</span> : <span class='ident'>SOCKET_ADDRESS</span>,
+    <span class='kw'>struct</span> <span class='ident'>IpAdapterUnicastAddress</span> {
+        <span class='kw'>pub</span> <span class='ident'>length</span> : <span class='ident'>c_ulong</span>,
+        <span class='kw'>pub</span> <span class='ident'>flags</span> : <span class='ident'>DWORD</span>,
+        <span class='kw'>pub</span> <span class='ident'>next</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterUnicastAddress</span>,
+        <span class='kw'>pub</span> <span class='ident'>address</span> : <span class='ident'>SocketAddress</span>,
         <span class='comment'>// Loads more follows, but I&#39;m not bothering to map these for now</span>
     }
     <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>bad_style</span>)]</span>
-    <span class='kw'>struct</span> <span class='ident'>IP_ADAPTER_PREFIX</span> {
-        <span class='kw'>pub</span> <span class='ident'>Length</span> : <span class='ident'>c_ulong</span>,
-        <span class='kw'>pub</span> <span class='ident'>Flags</span> : <span class='ident'>DWORD</span>,
-        <span class='kw'>pub</span> <span class='ident'>Next</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_PREFIX</span>,
-        <span class='kw'>pub</span> <span class='ident'>Address</span> : <span class='ident'>SOCKET_ADDRESS</span>,
-        <span class='kw'>pub</span> <span class='ident'>PrefixLength</span> : <span class='ident'>c_ulong</span>,
+    <span class='kw'>struct</span> <span class='ident'>IpAdapterPrefix</span> {
+        <span class='kw'>pub</span> <span class='ident'>length</span> : <span class='ident'>c_ulong</span>,
+        <span class='kw'>pub</span> <span class='ident'>flags</span> : <span class='ident'>DWORD</span>,
+        <span class='kw'>pub</span> <span class='ident'>next</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterPrefix</span>,
+        <span class='kw'>pub</span> <span class='ident'>address</span> : <span class='ident'>SocketAddress</span>,
+        <span class='kw'>pub</span> <span class='ident'>prefix_length</span> : <span class='ident'>c_ulong</span>,
     }
     <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>bad_style</span>)]</span>
-    <span class='kw'>struct</span> <span class='ident'>IP_ADAPTER_ADDRESSES</span> {
-        <span class='kw'>pub</span> <span class='ident'>Length</span> : <span class='ident'>c_ulong</span>,
-        <span class='kw'>pub</span> <span class='ident'>IfIndex</span> : <span class='ident'>DWORD</span>,
-        <span class='kw'>pub</span> <span class='ident'>Next</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_ADDRESSES</span>,
-        <span class='kw'>pub</span> <span class='ident'>AdapterName</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-        <span class='kw'>pub</span> <span class='ident'>FirstUnicastAddress</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_UNICAST_ADDRESS</span>,
-        <span class='ident'>FirstAnycastAddress</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
-        <span class='ident'>FirstMulticastAddress</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
-        <span class='ident'>FirstDnsServerAddress</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
-        <span class='ident'>DnsSuffix</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
-        <span class='ident'>Description</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
-        <span class='ident'>FriendlyName</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
-        <span class='ident'>PhysicalAddress</span> : [<span class='ident'>c_char</span>; <span class='number'>8</span>],
-        <span class='ident'>PhysicalAddressLength</span> : <span class='ident'>DWORD</span>,
-        <span class='ident'>Flags</span> : <span class='ident'>DWORD</span>,
-        <span class='ident'>Mtu</span> : <span class='ident'>DWORD</span>,
-        <span class='ident'>IfType</span> : <span class='ident'>DWORD</span>,
-        <span class='ident'>OperStatus</span> : <span class='ident'>c_int</span>,
-        <span class='ident'>Ipv6IfIndex</span> : <span class='ident'>DWORD</span>,
-        <span class='ident'>ZoneIndices</span> : [<span class='ident'>DWORD</span>; <span class='number'>16</span>],
-        <span class='kw'>pub</span> <span class='ident'>FirstPrefix</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_PREFIX</span>,
+    <span class='kw'>struct</span> <span class='ident'>IpAdapterAddresses</span> {
+        <span class='kw'>pub</span> <span class='ident'>length</span> : <span class='ident'>c_ulong</span>,
+        <span class='kw'>pub</span> <span class='ident'>if_index</span> : <span class='ident'>DWORD</span>,
+        <span class='kw'>pub</span> <span class='ident'>next</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterAddresses</span>,
+        <span class='kw'>pub</span> <span class='ident'>adapter_name</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+        <span class='kw'>pub</span> <span class='ident'>first_unicast_address</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterUnicastAddress</span>,
+        <span class='ident'>first_anycast_address</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+        <span class='ident'>first_multicast_address</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+        <span class='ident'>first_dns_server_address</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+        <span class='ident'>dns_suffix</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+        <span class='ident'>description</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+        <span class='ident'>friendly_name</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+        <span class='ident'>physical_address</span> : [<span class='ident'>c_char</span>; <span class='number'>8</span>],
+        <span class='ident'>physical_address_length</span> : <span class='ident'>DWORD</span>,
+        <span class='ident'>flags</span> : <span class='ident'>DWORD</span>,
+        <span class='ident'>mtu</span> : <span class='ident'>DWORD</span>,
+        <span class='ident'>if_type</span> : <span class='ident'>DWORD</span>,
+        <span class='ident'>oper_status</span> : <span class='ident'>c_int</span>,
+        <span class='ident'>ipv6_if_index</span> : <span class='ident'>DWORD</span>,
+        <span class='ident'>zone_indices</span> : [<span class='ident'>DWORD</span>; <span class='number'>16</span>],
+        <span class='kw'>pub</span> <span class='ident'>first_prefix</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterPrefix</span>,
         <span class='comment'>// Loads more follows, but I&#39;m not bothering to map these for now</span>
     }
     <span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span><span class='op'>=</span><span class='string'>&quot;Iphlpapi&quot;</span>)]</span>
     <span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetAdaptersAddresses</span>(<span class='ident'>family</span> : <span class='ident'>c_ulong</span>, <span class='ident'>flags</span> : <span class='ident'>c_ulong</span>, <span class='ident'>reserved</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>, <span class='ident'>addresses</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_ADDRESSES</span>, <span class='ident'>size</span> : <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_ulong</span>) <span class='op'>-&gt;</span> <span class='ident'>c_ulong</span>;
+        <span class='doccomment'>/// get adapter&#39;s addresses</span>
+        <span class='kw'>fn</span> <span class='ident'>GetAdaptersAddresses</span>(<span class='ident'>family</span> : <span class='ident'>c_ulong</span>, <span class='ident'>flags</span> : <span class='ident'>c_ulong</span>, <span class='ident'>reserved</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>, <span class='ident'>addresses</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterAddresses</span>, <span class='ident'>size</span> : <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_ulong</span>) <span class='op'>-&gt;</span> <span class='ident'>c_ulong</span>;
     }
 
     <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
@@ -734,11 +733,11 @@
     <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>, <span class='ident'>trivial_numeric_casts</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getifaddrs</span>() <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>IfAddr</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>IfAddr</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ifaddrs</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IP_ADAPTER_ADDRESSES</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ifaddrs</span> : <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IpAdapterAddresses</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buffersize</span> : <span class='ident'>c_ulong</span> <span class='op'>=</span> <span class='number'>15000</span>;
         <span class='kw'>loop</span> {
             <span class='kw'>unsafe</span> {
-                <span class='ident'>ifaddrs</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>malloc</span>(<span class='ident'>buffersize</span> <span class='kw'>as</span> <span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>IP_ADAPTER_ADDRESSES</span>;
+                <span class='ident'>ifaddrs</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>malloc</span>(<span class='ident'>buffersize</span> <span class='kw'>as</span> <span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>IpAdapterAddresses</span>;
                 <span class='kw'>if</span> <span class='ident'>ifaddrs</span>.<span class='ident'>is_null</span>() {
                     <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to allocate buffer in getifaddrs()&quot;</span>);
                 }
@@ -763,47 +762,47 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='boolval'>true</span>;
         <span class='kw'>while</span> <span class='op'>!</span><span class='ident'>_ifaddr</span>.<span class='ident'>is_null</span>() {
             <span class='kw'>if</span> <span class='ident'>first</span> { <span class='ident'>first</span><span class='op'>=</span><span class='boolval'>false</span>; }
-            <span class='kw'>else</span> { <span class='ident'>_ifaddr</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>_ifaddr</span>).<span class='ident'>Next</span> }; }
+            <span class='kw'>else</span> { <span class='ident'>_ifaddr</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>_ifaddr</span>).<span class='ident'>next</span> }; }
             <span class='kw'>if</span> <span class='ident'>_ifaddr</span>.<span class='ident'>is_null</span>() { <span class='kw'>break</span>; }
             <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>ifaddr</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>_ifaddr</span> };
             <span class='comment'>// debug!(&quot;ifaddr1={}, next={}&quot;, _ifaddr as u64, ifaddr.ifa_next as u64);</span>
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>addr</span> <span class='op'>=</span> <span class='ident'>ifaddr</span>.<span class='ident'>FirstUnicastAddress</span>;
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>addr</span> <span class='op'>=</span> <span class='ident'>ifaddr</span>.<span class='ident'>first_unicast_address</span>;
             <span class='kw'>if</span> <span class='ident'>addr</span>.<span class='ident'>is_null</span>() { <span class='kw'>continue</span>; }
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>firstaddr</span> <span class='op'>=</span> <span class='boolval'>true</span>;
             <span class='kw'>while</span> <span class='op'>!</span><span class='ident'>addr</span>.<span class='ident'>is_null</span>() {
                 <span class='kw'>if</span> <span class='ident'>firstaddr</span> { <span class='ident'>firstaddr</span><span class='op'>=</span><span class='boolval'>false</span>; }
-                <span class='kw'>else</span> { <span class='ident'>addr</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>addr</span>).<span class='ident'>Next</span> }; }
+                <span class='kw'>else</span> { <span class='ident'>addr</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>addr</span>).<span class='ident'>next</span> }; }
                 <span class='kw'>if</span> <span class='ident'>addr</span>.<span class='ident'>is_null</span>() { <span class='kw'>break</span>; }
 
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>item</span> <span class='op'>=</span> <span class='ident'>IfAddr</span>::<span class='ident'>new</span>();
-                <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ifaddr</span>.<span class='ident'>AdapterName</span>) }.<span class='ident'>to_bytes</span>();
+                <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ifaddr</span>.<span class='ident'>adapter_name</span>) }.<span class='ident'>to_bytes</span>();
                 <span class='ident'>item</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>item</span>.<span class='ident'>name</span> <span class='op'>+</span> <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>name</span>).<span class='ident'>unwrap</span>();
 
-                <span class='kw'>let</span> <span class='ident'>ipaddr</span> <span class='op'>=</span> <span class='ident'>sockaddr_to_ipaddr</span>(<span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>addr</span>).<span class='ident'>Address</span>.<span class='ident'>lpSockaddr</span> });
+                <span class='kw'>let</span> <span class='ident'>ipaddr</span> <span class='op'>=</span> <span class='ident'>sockaddr_to_ipaddr</span>(<span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>addr</span>).<span class='ident'>address</span>.<span class='ident'>lp_socket_address</span> });
                 <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>ipaddr</span>.<span class='ident'>is_some</span>() { <span class='kw'>continue</span>; }
                 <span class='ident'>item</span>.<span class='ident'>addr</span> <span class='op'>=</span> <span class='ident'>ipaddr</span>.<span class='ident'>unwrap</span>();
 
                 <span class='comment'>// Search prefixes for a prefix matching addr</span>
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>prefix</span> <span class='op'>=</span> <span class='ident'>ifaddr</span>.<span class='ident'>FirstPrefix</span>;
+                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>prefix</span> <span class='op'>=</span> <span class='ident'>ifaddr</span>.<span class='ident'>first_prefix</span>;
                 <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>prefix</span>.<span class='ident'>is_null</span>() {
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>firstprefix</span> <span class='op'>=</span> <span class='boolval'>true</span>;
+                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>first_prefix</span> <span class='op'>=</span> <span class='boolval'>true</span>;
                     <span class='lifetime'>&#39;prefixloop</span>: <span class='kw'>while</span> <span class='op'>!</span><span class='ident'>prefix</span>.<span class='ident'>is_null</span>() {
-                        <span class='kw'>if</span> <span class='ident'>firstprefix</span> { <span class='ident'>firstprefix</span><span class='op'>=</span><span class='boolval'>false</span>; }
-                        <span class='kw'>else</span> { <span class='ident'>prefix</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>Next</span> }; }
+                        <span class='kw'>if</span> <span class='ident'>first_prefix</span> { <span class='ident'>first_prefix</span> <span class='op'>=</span> <span class='boolval'>false</span>; }
+                        <span class='kw'>else</span> { <span class='ident'>prefix</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>next</span> }; }
                         <span class='kw'>if</span> <span class='ident'>prefix</span>.<span class='ident'>is_null</span>() { <span class='kw'>break</span>; }
 
-                        <span class='kw'>let</span> <span class='ident'>ipprefix</span> <span class='op'>=</span> <span class='ident'>sockaddr_to_ipaddr</span>(<span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>Address</span>.<span class='ident'>lpSockaddr</span> });
+                        <span class='kw'>let</span> <span class='ident'>ipprefix</span> <span class='op'>=</span> <span class='ident'>sockaddr_to_ipaddr</span>(<span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>address</span>.<span class='ident'>lp_socket_address</span> });
                         <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>ipprefix</span>.<span class='ident'>is_some</span>() { <span class='kw'>continue</span>; }
                         <span class='kw'>match</span> <span class='ident'>ipprefix</span>.<span class='ident'>unwrap</span>() {
                             <span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='kw-2'>ref</span> <span class='ident'>a</span>) <span class='op'>=&gt;</span> {
                                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>b</span>) <span class='op'>=</span> <span class='ident'>item</span>.<span class='ident'>addr</span> {
                                     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>netmask</span> : [<span class='ident'>u8</span>; <span class='number'>4</span>] <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>4</span>];
-                                    <span class='kw'>for</span> <span class='ident'>n</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>PrefixLength</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>+</span> <span class='number'>7</span> }<span class='op'>/</span><span class='number'>8</span> {
+                                    <span class='kw'>for</span> <span class='ident'>n</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>prefix_length</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>+</span> <span class='number'>7</span> }<span class='op'>/</span><span class='number'>8</span> {
                                         <span class='kw'>let</span> <span class='ident'>x_byte</span> <span class='op'>=</span> <span class='ident'>b</span>.<span class='ident'>octets</span>()[<span class='ident'>n</span>];
                                         <span class='kw'>let</span> <span class='ident'>y_byte</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>octets</span>()[<span class='ident'>n</span>];
                                         <span class='kw'>for</span> <span class='ident'>m</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>8</span> {
-                                            <span class='kw'>if</span> (<span class='ident'>n</span> <span class='op'>*</span> <span class='number'>8</span>) <span class='op'>+</span> <span class='ident'>m</span> <span class='op'>&gt;</span> <span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>PrefixLength</span> <span class='kw'>as</span> <span class='ident'>usize</span> } { <span class='kw'>break</span>; }
+                                            <span class='kw'>if</span> (<span class='ident'>n</span> <span class='op'>*</span> <span class='number'>8</span>) <span class='op'>+</span> <span class='ident'>m</span> <span class='op'>&gt;</span> <span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>prefix_length</span> <span class='kw'>as</span> <span class='ident'>usize</span> } { <span class='kw'>break</span>; }
                                             <span class='kw'>let</span> <span class='ident'>bit</span> <span class='op'>=</span> <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>m</span>;
                                             <span class='kw'>if</span> (<span class='ident'>x_byte</span> <span class='kw-2'>&amp;</span> <span class='ident'>bit</span>) <span class='op'>==</span> (<span class='ident'>y_byte</span> <span class='kw-2'>&amp;</span> <span class='ident'>bit</span>) {
                                                 <span class='ident'>netmask</span>[<span class='ident'>n</span>] <span class='op'>=</span> <span class='ident'>netmask</span>[<span class='ident'>n</span>] <span class='op'>|</span> <span class='ident'>bit</span>;
@@ -836,11 +835,11 @@
                                     <span class='comment'>// Iterate the bits in the prefix, if they all match this prefix is the</span>
                                     <span class='comment'>// right one, else try the next prefix</span>
                                     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>netmask</span> : [<span class='ident'>u16</span>; <span class='number'>8</span>] <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>8</span>];
-                                    <span class='kw'>for</span> <span class='ident'>n</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>PrefixLength</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>+</span> <span class='number'>15</span> }<span class='op'>/</span><span class='number'>16</span> {
+                                    <span class='kw'>for</span> <span class='ident'>n</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>prefix_length</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>+</span> <span class='number'>15</span> }<span class='op'>/</span><span class='number'>16</span> {
                                         <span class='kw'>let</span> <span class='ident'>x_word</span> <span class='op'>=</span> <span class='ident'>b</span>.<span class='ident'>segments</span>()[<span class='ident'>n</span>];
                                         <span class='kw'>let</span> <span class='ident'>y_word</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>segments</span>()[<span class='ident'>n</span>];
                                         <span class='kw'>for</span> <span class='ident'>m</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>16</span> {
-                                            <span class='kw'>if</span> (<span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16</span>) <span class='op'>+</span> <span class='ident'>m</span> <span class='op'>&gt;</span> <span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>PrefixLength</span> <span class='kw'>as</span> <span class='ident'>usize</span> } { <span class='kw'>break</span>; }
+                                            <span class='kw'>if</span> (<span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16</span>) <span class='op'>+</span> <span class='ident'>m</span> <span class='op'>&gt;</span> <span class='kw'>unsafe</span>{ (<span class='op'>*</span><span class='ident'>prefix</span>).<span class='ident'>prefix_length</span> <span class='kw'>as</span> <span class='ident'>usize</span> } { <span class='kw'>break</span>; }
                                             <span class='kw'>let</span> <span class='ident'>bit</span> <span class='op'>=</span> <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>m</span>;
                                             <span class='kw'>if</span> (<span class='ident'>x_word</span> <span class='kw-2'>&amp;</span> <span class='ident'>bit</span>) <span class='op'>==</span> (<span class='ident'>y_word</span> <span class='kw-2'>&amp;</span> <span class='ident'>bit</span>) {
                                                 <span class='ident'>netmask</span>[<span class='ident'>n</span>] <span class='op'>=</span> <span class='ident'>netmask</span>[<span class='ident'>n</span>] <span class='op'>|</span> <span class='ident'>bit</span>;
@@ -873,15 +872,13 @@
     }
 }
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
+<span class='doccomment'>/// Get address</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getifaddrs</span>() <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>IfAddr</span><span class='op'>&gt;</span> {
     <span class='ident'>getifaddrs_windows</span>::<span class='ident'>getifaddrs</span>()
 }
 
 <span class='kw'>fn</span> <span class='ident'>is_loopback</span>(<span class='ident'>if_addr</span>: <span class='kw-2'>&amp;</span><span class='ident'>IfAddr</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>match</span> <span class='ident'>if_addr</span>.<span class='ident'>addr</span> {
-            <span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>v4</span>) <span class='op'>=&gt;</span> <span class='ident'>v4</span>.<span class='ident'>is_loopback</span>(),
-            <span class='ident'>IpAddr</span>::<span class='ident'>V6</span>(<span class='ident'>v6</span>) <span class='op'>=&gt;</span> <span class='ident'>v6</span>.<span class='ident'>is_loopback</span>(),
-    }
+    ::<span class='ident'>util</span>::<span class='ident'>is_loopback</span>(<span class='kw-2'>&amp;</span><span class='ident'>if_addr</span>.<span class='ident'>addr</span>)
 }
 
 <span class='doccomment'>/// Remove loopback address(s)</span>
@@ -893,7 +890,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>getifaddrs</span>, <span class='ident'>filter_loopback</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>IpAddr</span>;
+    <span class='kw'>use</span> <span class='ident'>ip</span>::<span class='ident'>IpAddr</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_getifaddrs</span>() {
@@ -903,8 +900,8 @@
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;   Interface {} has IP {} netmask {} broadcast {}&quot;</span>, <span class='ident'>ifaddr</span>.<span class='ident'>name</span>,
                      <span class='ident'>ifaddr</span>.<span class='ident'>addr</span>, <span class='ident'>ifaddr</span>.<span class='ident'>netmask</span>, <span class='ident'>ifaddr</span>.<span class='ident'>broadcast</span>);
             <span class='kw'>match</span> <span class='ident'>ifaddr</span>.<span class='ident'>addr</span> {
-                <span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>v4</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='ident'>v4</span>.<span class='ident'>is_loopback</span>() { <span class='ident'>has_loopback4</span><span class='op'>=</span><span class='boolval'>true</span>; },
-                <span class='ident'>IpAddr</span>::<span class='ident'>V6</span>(<span class='ident'>v6</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='ident'>v6</span>.<span class='ident'>is_loopback</span>() { <span class='ident'>has_loopback6</span><span class='op'>=</span><span class='boolval'>true</span>; },
+                <span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>v4</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> ::<span class='ident'>ip_info</span>::<span class='ident'>v4</span>::<span class='ident'>is_loopback</span>(<span class='kw-2'>&amp;</span><span class='ident'>v4</span>) { <span class='ident'>has_loopback4</span><span class='op'>=</span><span class='boolval'>true</span>; },
+                <span class='ident'>IpAddr</span>::<span class='ident'>V6</span>(<span class='ident'>v6</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> ::<span class='ident'>ip_info</span>::<span class='ident'>v6</span>::<span class='ident'>is_loopback</span>(<span class='kw-2'>&amp;</span><span class='ident'>v6</span>) { <span class='ident'>has_loopback6</span><span class='op'>=</span><span class='boolval'>true</span>; },
             }
         }
         <span class='comment'>// Quick sanity test, can&#39;t think of anything better</span>
@@ -917,11 +914,7 @@
         <span class='kw'>for</span> <span class='ident'>ifaddr</span> <span class='kw'>in</span> <span class='ident'>ifaddrs</span> {
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;   Interface {} has IP {} netmask {} broadcast {}&quot;</span>, <span class='ident'>ifaddr</span>.<span class='ident'>name</span>,
                      <span class='ident'>ifaddr</span>.<span class='ident'>addr</span>, <span class='ident'>ifaddr</span>.<span class='ident'>netmask</span>, <span class='ident'>ifaddr</span>.<span class='ident'>broadcast</span>);
-            <span class='kw'>let</span> <span class='ident'>is_loopback</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>ifaddr</span>.<span class='ident'>addr</span> {
-                <span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>v4</span>) <span class='op'>=&gt;</span> <span class='ident'>v4</span>.<span class='ident'>is_loopback</span>(),
-                <span class='ident'>IpAddr</span>::<span class='ident'>V6</span>(<span class='ident'>v6</span>) <span class='op'>=&gt;</span> <span class='ident'>v6</span>.<span class='ident'>is_loopback</span>(),
-            };
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>is_loopback</span>);
+            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>::<span class='ident'>util</span>::<span class='ident'>is_loopback</span>(<span class='kw-2'>&amp;</span><span class='ident'>ifaddr</span>.<span class='ident'>addr</span>));
         }
     }
 }
@@ -985,6 +978,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

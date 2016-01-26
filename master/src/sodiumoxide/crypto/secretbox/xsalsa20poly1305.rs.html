@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/sodiumoxide-0.0.8/src/crypto/secretbox/xsalsa20poly1305.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/sodiumoxide-0.0.9/src/crypto/secretbox/xsalsa20poly1305.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>xsalsa20poly1305.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -256,6 +257,9 @@
 <span id="214">214</span>
 <span id="215">215</span>
 <span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `crypto_secretbox_xsalsa20poly1305`, a particular</span>
 <span class='doccomment'>//! combination of Salsa20 and Poly1305 specified in</span>
@@ -268,7 +272,10 @@
 <span class='kw'>use</span> <span class='ident'>randombytes</span>::<span class='ident'>randombytes_into</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
 
+<span class='doccomment'>/// Number of bytes in `Key`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_secretbox_xsalsa20poly1305_KEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `Nonce`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NONCEBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_secretbox_xsalsa20poly1305_NONCEBYTES</span>;
 
 <span class='doccomment'>/// `Key` for symmetric authenticated encryption</span>
@@ -533,6 +540,6 @@
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

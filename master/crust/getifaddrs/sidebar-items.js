@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["getifaddrs",""]]});
+initSidebarItems({"fn":[["getifaddrs","For non-Windows operating system, use this function to get address"]]});

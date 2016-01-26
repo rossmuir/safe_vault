@@ -9,6 +9,7 @@
 
     <title>utp::UtpListener - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1036' class='srclink' href='../src/utp/socket.rs.html#1322-1325' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1053' class='srclink' href='../src/utp/socket.rs.html#1416-1419' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct UtpListener {
     // some fields omitted
 }</pre><div class='docblock'><p>A structure representing a socket server.</p>
@@ -61,13 +62,12 @@
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
     <span class='comment'>// Create a listener</span>
     <span class='kw'>let</span> <span class='ident'>addr</span> <span class='op'>=</span> <span class='string'>&quot;127.0.0.1:8080&quot;</span>;
-    <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='ident'>UtpListener</span>::<span class='ident'>bind</span>(<span class='ident'>addr</span>).<span class='ident'>unwrap</span>();
+    <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='ident'>UtpListener</span>::<span class='ident'>bind</span>(<span class='ident'>addr</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Error binding socket&quot;</span>);
 
     <span class='kw'>for</span> <span class='ident'>connection</span> <span class='kw'>in</span> <span class='ident'>listener</span>.<span class='ident'>incoming</span>() {
         <span class='comment'>// Spawn a new handler for each new connection</span>
-        <span class='kw'>match</span> <span class='ident'>connection</span> {
-            <span class='prelude-val'>Ok</span>((<span class='ident'>socket</span>, <span class='ident'>_src</span>)) <span class='op'>=&gt;</span> { <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> { <span class='ident'>handle_client</span>(<span class='ident'>socket</span>) }); },
-            _ <span class='op'>=&gt;</span> ()
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>((<span class='ident'>socket</span>, <span class='ident'>_src</span>)) <span class='op'>=</span> <span class='ident'>connection</span> {
+            <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> <span class='ident'>handle_client</span>(<span class='ident'>socket</span>));
         }
     }
 }</pre>
@@ -153,6 +153,6 @@ listening port (which <code>UtpListener</code> holds). This may confuse the remo
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

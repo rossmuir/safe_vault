@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/net2-0.2.16/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/net2-0.2.21/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     <link rel="shortcut icon" href="https://doc.rust-lang.org/favicon.ico">
@@ -158,6 +159,8 @@
 <span id="116">116</span>
 <span id="117">117</span>
 <span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -222,7 +225,9 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span> <span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;sys/unix/mod.rs&quot;</span>]</span> <span class='kw'>mod</span> <span class='ident'>sys</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span> <span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;sys/windows/mod.rs&quot;</span>]</span> <span class='kw'>mod</span> <span class='ident'>sys</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>unix</span>;
+<span class='comment'>// FIXME: should include android here once SO_REUSEPORT has been fixed in</span>
+<span class='comment'>//        liblibc on android</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>unix</span>, <span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>)))]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>unix</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>tcp</span>::<span class='ident'>TcpBuilder</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>udp</span>::<span class='ident'>UdpBuilder</span>;
@@ -337,6 +342,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

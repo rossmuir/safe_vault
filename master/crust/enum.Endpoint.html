@@ -9,6 +9,7 @@
 
     <title>crust::Endpoint - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1245' class='srclink' href='../src/crust/transport.rs.html#49-54' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1507' class='srclink' href='../src/crust/transport.rs.html#51-56' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Endpoint {
     Tcp(<a class='enum' href='https://doc.rust-lang.org/nightly/std/net/addr/enum.SocketAddr.html' title='std::net::addr::SocketAddr'>SocketAddr</a>),
     Utp(<a class='enum' href='https://doc.rust-lang.org/nightly/std/net/addr/enum.SocketAddr.html' title='std::net::addr::SocketAddr'>SocketAddr</a>),
@@ -53,7 +54,7 @@
 </div><h2 class='variants'>Variants</h2>
 <table><tr><td id='variant.Tcp'><code>Tcp</code></td><td><div class='docblock'><p>TCP endpoint</p>
 </div></td></tr><tr><td id='variant.Utp'><code>Utp</code></td><td><div class='docblock'><p>UTP endpoint</p>
-</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(addr: <a class='enum' href='https://doc.rust-lang.org/nightly/std/net/ip/enum.IpAddr.html' title='std::net::ip::IpAddr'>IpAddr</a>, port: <a class='enum' href='../crust/enum.Port.html' title='crust::Port'>Port</a>) -&gt; <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h4>
+</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(addr: <a class='enum' href='../ip/enum.IpAddr.html' title='ip::IpAddr'>IpAddr</a>, port: <a class='enum' href='../crust/enum.Port.html' title='crust::Port'>Port</a>) -&gt; <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h4>
 <div class='docblock'><p>Construct a new Endpoint</p>
 </div><h4 id='method.tcp' class='method'><code>fn <a href='#method.tcp' class='fnname'>tcp</a>&lt;A: <a class='trait' href='https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html' title='std::net::addr::ToSocketAddrs'>ToSocketAddrs</a>&gt;(addr: A) -&gt; <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h4>
 <div class='docblock'><p>Creates a Tcp(SocketAddr)</p>
@@ -64,9 +65,13 @@
 </div><h4 id='method.get_port' class='method'><code>fn <a href='#method.get_port' class='fnname'>get_port</a>(&amp;self) -&gt; <a class='enum' href='../crust/enum.Port.html' title='crust::Port'>Port</a></code></h4>
 <div class='docblock'><p>Returns port</p>
 </div><h4 id='method.to_ip' class='method'><code>fn <a href='#method.to_ip' class='fnname'>to_ip</a>(&amp;self) -&gt; Endpoint</code></h4>
-<h4 id='method.has_unspecified_ip' class='method'><code>fn <a href='#method.has_unspecified_ip' class='fnname'>has_unspecified_ip</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.map_ip_addr' class='method'><code>fn <a href='#method.map_ip_addr' class='fnname'>map_ip_addr</a>&lt;F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(<a class='enum' href='https://doc.rust-lang.org/nightly/std/net/ip/enum.IpAddr.html' title='std::net::ip::IpAddr'>IpAddr</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/std/net/ip/enum.IpAddr.html' title='std::net::ip::IpAddr'>IpAddr</a>&gt;(&amp;self, f: F) -&gt; <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../rustc_serialize/serialize/trait.Encodable.html' title='rustc_serialize::serialize::Encodable'>Encodable</a> for <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h3><div class='impl-items'><h4 id='method.encode' class='method'><code>fn <a href='../rustc_serialize/serialize/trait.Encodable.html#method.encode' class='fnname'>encode</a>&lt;E: <a class='trait' href='../rustc_serialize/serialize/trait.Encoder.html' title='rustc_serialize::serialize::Encoder'>Encoder</a>&gt;(&amp;self, e: &amp;mut E) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, E::Error&gt;</code></h4>
+<div class='docblock'><p>Convert address format from Port to Endpoint</p>
+</div><h4 id='method.has_unspecified_ip' class='method'><code>fn <a href='#method.has_unspecified_ip' class='fnname'>has_unspecified_ip</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Check whether the current address is specified
+returns true if address is un-specified, and false when specified</p>
+</div><h4 id='method.map_ip_addr' class='method'><code>fn <a href='#method.map_ip_addr' class='fnname'>map_ip_addr</a>&lt;F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(<a class='enum' href='../ip/enum.IpAddr.html' title='ip::IpAddr'>IpAddr</a>) -&gt; <a class='enum' href='../ip/enum.IpAddr.html' title='ip::IpAddr'>IpAddr</a>&gt;(&amp;self, f: F) -&gt; <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h4>
+<div class='docblock'><p>Convert address&#39;s format from ::std::net::IpAddr to Endpoint</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../rustc_serialize/serialize/trait.Encodable.html' title='rustc_serialize::serialize::Encodable'>Encodable</a> for <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h3><div class='impl-items'><h4 id='method.encode' class='method'><code>fn <a href='../rustc_serialize/serialize/trait.Encodable.html#method.encode' class='fnname'>encode</a>&lt;E: <a class='trait' href='../rustc_serialize/serialize/trait.Encoder.html' title='rustc_serialize::serialize::Encoder'>Encoder</a>&gt;(&amp;self, e: &amp;mut E) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, E::Error&gt;</code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='../rustc_serialize/serialize/trait.Decodable.html' title='rustc_serialize::serialize::Decodable'>Decodable</a> for <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h3><div class='impl-items'><h4 id='method.decode' class='method'><code>fn <a href='../rustc_serialize/serialize/trait.Decodable.html#method.decode' class='fnname'>decode</a>&lt;D: <a class='trait' href='../rustc_serialize/serialize/trait.Decoder.html' title='rustc_serialize::serialize::Decoder'>Decoder</a>&gt;(d: &amp;mut D) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a>, D::Error&gt;</code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> for <a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a></code></h3><div class='impl-items'><h4 id='method.partial_cmp' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, other: &amp;<a class='enum' href='../crust/enum.Endpoint.html' title='crust::Endpoint'>Endpoint</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>&gt;</code></h4>
 <h4 id='method.lt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.lt' class='fnname'>lt</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
@@ -140,6 +145,6 @@
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

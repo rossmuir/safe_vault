@@ -9,6 +9,7 @@
 
     <title>sodiumoxide::crypto::pwhash::scryptsalsa208sha256 - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-2827' class='srclink' href='../../../../src/sodiumoxide/crypto/pwhash/scryptsalsa208sha256.rs.html#1-213' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-2881' class='srclink' href='../../../../src/sodiumoxide/crypto/pwhash/scryptsalsa208sha256.rs.html#1-226' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><code>crypto_pwhash_scryptsalsa208sha256</code>, a particular combination of Scrypt, Salsa20/8
 and SHA-256</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -90,10 +91,20 @@ using the functions in this module.</p>
                 </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
 <table>
                     <tr class=' module-item'>
+                        <td><a class='constant' href='constant.HASHEDPASSWORDBYTES.html'
+                               title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::HASHEDPASSWORDBYTES'>HASHEDPASSWORDBYTES</a></td>
+                        <td class='docblock short'>
+                             <p>Number of bytes in a <code>HashedPassword</code>.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
                         <td><a class='constant' href='constant.MEMLIMIT_INTERACTIVE.html'
                                title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::MEMLIMIT_INTERACTIVE'>MEMLIMIT_INTERACTIVE</a></td>
                         <td class='docblock short'>
-                             
+                             <p>Safe base line for <code>MemLimit</code> for interactive password hashing.</p>
+
                         </td>
                     </tr>
                 
@@ -101,7 +112,8 @@ using the functions in this module.</p>
                         <td><a class='constant' href='constant.MEMLIMIT_SENSITIVE.html'
                                title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::MEMLIMIT_SENSITIVE'>MEMLIMIT_SENSITIVE</a></td>
                         <td class='docblock short'>
-                             
+                             <p><code>MemLimit</code> for highly sensitive data.</p>
+
                         </td>
                     </tr>
                 
@@ -109,7 +121,8 @@ using the functions in this module.</p>
                         <td><a class='constant' href='constant.OPSLIMIT_INTERACTIVE.html'
                                title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::OPSLIMIT_INTERACTIVE'>OPSLIMIT_INTERACTIVE</a></td>
                         <td class='docblock short'>
-                             
+                             <p>Safe base line for <code>OpsLimit</code> for interactive password hashing.</p>
+
                         </td>
                     </tr>
                 
@@ -117,7 +130,8 @@ using the functions in this module.</p>
                         <td><a class='constant' href='constant.OPSLIMIT_SENSITIVE.html'
                                title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::OPSLIMIT_SENSITIVE'>OPSLIMIT_SENSITIVE</a></td>
                         <td class='docblock short'>
-                             
+                             <p><code>OpsLimit</code> for highly sensitive data.</p>
+
                         </td>
                     </tr>
                 
@@ -125,15 +139,8 @@ using the functions in this module.</p>
                         <td><a class='constant' href='constant.SALTBYTES.html'
                                title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::SALTBYTES'>SALTBYTES</a></td>
                         <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='constant' href='constant.STRBYTES.html'
-                               title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::STRBYTES'>STRBYTES</a></td>
-                        <td class='docblock short'>
-                             
+                             <p>Number of bytes in a <code>Salt</code>.</p>
+
                         </td>
                     </tr>
                 
@@ -141,7 +148,8 @@ using the functions in this module.</p>
                         <td><a class='constant' href='constant.STRPREFIX.html'
                                title='sodiumoxide::crypto::pwhash::scryptsalsa208sha256::STRPREFIX'>STRPREFIX</a></td>
                         <td class='docblock short'>
-                             
+                             <p>All <code>HashedPasswords</code> start with this string.</p>
+
                         </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -242,6 +250,6 @@ verification string (as generated by <code>pwhash()</code>) for <code>passwd</co
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

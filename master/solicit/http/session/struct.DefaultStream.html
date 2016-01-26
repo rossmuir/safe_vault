@@ -9,6 +9,7 @@
 
     <title>solicit::http::session::DefaultStream - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1153' class='srclink' href='../../../src/solicit/http/session.rs.html#262-274' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1191' class='srclink' href='../../../src/solicit/http/session.rs.html#262-274' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct DefaultStream {
     pub stream_id: <a class='type' href='../../../solicit/http/type.StreamId.html' title='solicit::http::StreamId'>StreamId</a>,
     pub headers: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../../solicit/http/type.Header.html' title='solicit::http::Header'>Header</a>&gt;&gt;,
@@ -71,7 +72,7 @@ in memory.</p>
 <div class='docblock'><p>Sets the outgoing data of the stream to the given <code>Vec</code>.</p>
 
 <p>Any previously associated (and perhaps unwritten) data is discarded.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../../../solicit/http/session/trait.Stream.html' title='solicit::http::session::Stream'>Stream</a> for <a class='struct' href='../../../solicit/http/session/struct.DefaultStream.html' title='solicit::http::session::DefaultStream'>DefaultStream</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='../../../solicit/http/session/trait.Stream.html#method.new' class='fnname'>new</a>(stream_id: <a class='type' href='../../../solicit/http/type.StreamId.html' title='solicit::http::StreamId'>StreamId</a>) -&gt; <a class='struct' href='../../../solicit/http/session/struct.DefaultStream.html' title='solicit::http::session::DefaultStream'>DefaultStream</a></code></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../../../solicit/http/session/trait.Stream.html' title='solicit::http::session::Stream'>Stream</a> for <a class='struct' href='../../../solicit/http/session/struct.DefaultStream.html' title='solicit::http::session::DefaultStream'>DefaultStream</a></code></h3><div class='impl-items'><h4 id='method.new-1' class='method'><code>fn <a href='../../../solicit/http/session/trait.Stream.html#method.new' class='fnname'>new</a>(stream_id: <a class='type' href='../../../solicit/http/type.StreamId.html' title='solicit::http::StreamId'>StreamId</a>) -&gt; <a class='struct' href='../../../solicit/http/session/struct.DefaultStream.html' title='solicit::http::session::DefaultStream'>DefaultStream</a></code></h4>
 <h4 id='method.new_data_chunk' class='method'><code>fn <a href='../../../solicit/http/session/trait.Stream.html#method.new_data_chunk' class='fnname'>new_data_chunk</a>(&amp;mut self, data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <h4 id='method.set_headers' class='method'><code>fn <a href='../../../solicit/http/session/trait.Stream.html#method.set_headers' class='fnname'>set_headers</a>(&amp;mut self, headers: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../../solicit/http/type.Header.html' title='solicit::http::Header'>Header</a>&gt;)</code></h4>
 <h4 id='method.set_state' class='method'><code>fn <a href='../../../solicit/http/session/trait.Stream.html#method.set_state' class='fnname'>set_state</a>(&amp;mut self, state: <a class='enum' href='../../../solicit/http/session/enum.StreamState.html' title='solicit::http::session::StreamState'>StreamState</a>)</code></h4>
@@ -145,6 +146,6 @@ in memory.</p>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

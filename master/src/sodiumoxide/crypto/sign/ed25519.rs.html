@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/sodiumoxide-0.0.8/src/crypto/sign/ed25519.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/sodiumoxide-0.0.9/src/crypto/sign/ed25519.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ed25519.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -396,6 +397,14 @@
 <span id="354">354</span>
 <span id="355">355</span>
 <span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `ed25519`, a signature scheme specified in</span>
 <span class='doccomment'>//! [Ed25519](http://ed25519.cr.yp.to/). This function is conjectured to meet the</span>
@@ -405,9 +414,17 @@
 <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_ulonglong</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>repeat</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
+
+<span class='doccomment'>/// Number of bytes in a `Seed`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SEEDBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_ed25519_SEEDBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `SecretKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SECRETKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_ed25519_SECRETKEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `PublicKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PUBLICKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_ed25519_PUBLICKEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `Signature`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SIGNATUREBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_ed25519_BYTES</span>;
 
 <span class='doccomment'>/// `Seed` that can be used for keypair generation</span>
@@ -813,6 +830,6 @@
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

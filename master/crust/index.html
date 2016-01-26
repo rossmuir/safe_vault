@@ -9,6 +9,7 @@
 
     <title>crust - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/crust/lib.rs.html#18-90' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/crust/lib.rs.html#18-107' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='crust' class='section-header'><a href='#crust'>crust</a></h1>
 <p>Reliable peer-to-peer network connections in Rust with NAT traversal.</p>
@@ -85,7 +86,17 @@ connections.</p>
                         <td><a class='struct' href='struct.Connection.html'
                                title='crust::Connection'>Connection</a></td>
                         <td class='docblock short'>
-                             
+                             <p>Information hold for the connection between a pair of nodes</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SocketAddrW.html'
+                               title='crust::SocketAddrW'>SocketAddrW</a></td>
+                        <td class='docblock short'>
+                             <p>Utility struct of SocketAddr for hole punching</p>
+
                         </td>
                     </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -132,7 +143,8 @@ of this module.</p>
                         <td><a class='fn' href='fn.getifaddrs.html'
                                title='crust::getifaddrs'>getifaddrs</a></td>
                         <td class='docblock short'>
-                             
+                             <p>For non-Windows operating system, use this function to get address</p>
+
                         </td>
                     </tr>
                 
@@ -140,7 +152,10 @@ of this module.</p>
                         <td><a class='fn' href='fn.ifaddrs_if_unspecified.html'
                                title='crust::ifaddrs_if_unspecified'>ifaddrs_if_unspecified</a></td>
                         <td class='docblock short'>
-                             
+                             <p>This function should really take IpAddr as an argument
+but it is used outside of this library and IpAddr
+is currently considered experimental.</p>
+
                         </td>
                     </tr>
                 
@@ -149,6 +164,16 @@ of this module.</p>
                                title='crust::write_config_file'>write_config_file</a></td>
                         <td class='docblock short'>
                              <p>Writes a Crust config file <strong>for use by tests and examples</strong>.</p>
+
+                        </td>
+                    </tr>
+                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.CrustEventSender.html'
+                               title='crust::CrustEventSender'>CrustEventSender</a></td>
+                        <td class='docblock short'>
+                             <p>Crust Observers will be informed of crust events on this</p>
 
                         </td>
                     </tr>
@@ -211,6 +236,6 @@ of this module.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

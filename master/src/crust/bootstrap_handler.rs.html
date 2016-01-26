@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/crust-0.4.2/src/bootstrap_handler.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/crust-0.8.0/src/bootstrap_handler.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>bootstrap_handler.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
@@ -287,6 +288,22 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -313,16 +330,24 @@
 <span class='doccomment'>//! with any other one.</span>
 
 <span class='kw'>use</span> <span class='ident'>transport</span>::<span class='ident'>Endpoint</span>;
+<span class='kw'>use</span> <span class='ident'>file_handler</span>::<span class='ident'>FileHandler</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>SocketAddr</span>;
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BootstrapHandler</span> {
-    <span class='ident'>file_handler</span>: ::<span class='ident'>file_handler</span>::<span class='ident'>FileHandler</span>,
+    <span class='ident'>file_handler</span>: <span class='ident'>FileHandler</span>,
     <span class='ident'>last_updated</span>: ::<span class='ident'>time</span>::<span class='ident'>Tm</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>BootstrapHandler</span> {
+    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cleanup</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='ident'>FileHandler</span>::<span class='ident'>cleanup</span>(<span class='kw-2'>&amp;</span><span class='ident'>get_file_name</span>())
+    }
+
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>BootstrapHandler</span> {
         <span class='ident'>BootstrapHandler</span> {
-            <span class='ident'>file_handler</span>: ::<span class='ident'>file_handler</span>::<span class='ident'>FileHandler</span>::<span class='ident'>new</span>(<span class='ident'>get_file_name</span>()),
+            <span class='ident'>file_handler</span>: <span class='ident'>FileHandler</span>::<span class='ident'>new</span>(<span class='ident'>get_file_name</span>()),
             <span class='ident'>last_updated</span>: ::<span class='ident'>time</span>::<span class='ident'>now</span>(),
         }
     }
@@ -355,6 +380,14 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bootstrap_contacts</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>read_file</span>().<span class='ident'>unwrap_or_else</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> {
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Error reading Bootstrap file: {:?}.&quot;</span>, <span class='ident'>e</span>);
             <span class='ident'>Vec</span>::<span class='ident'>new</span>()
+        });
+
+        <span class='comment'>// We wouldn&#39;t add any loopback addresses nor addresses from our local</span>
+        <span class='comment'>// LAN to the bootstrap cache. We can always find such addresses using</span>
+        <span class='comment'>// beacon and more often than not they would be obsolete very soon.</span>
+        <span class='ident'>contacts</span>.<span class='ident'>retain</span>(<span class='op'>|</span><span class='ident'>contact</span><span class='op'>|</span> <span class='kw'>match</span> <span class='ident'>contact</span>.<span class='ident'>get_address</span>() {
+            <span class='ident'>SocketAddr</span>::<span class='ident'>V4</span>(<span class='ident'>a</span>) <span class='op'>=&gt;</span> ::<span class='ident'>ip_info</span>::<span class='ident'>v4</span>::<span class='ident'>is_global</span>(<span class='ident'>a</span>.<span class='ident'>ip</span>()),
+            <span class='ident'>SocketAddr</span>::<span class='ident'>V6</span>(<span class='ident'>a</span>) <span class='op'>=&gt;</span> ::<span class='ident'>ip_info</span>::<span class='ident'>v6</span>::<span class='ident'>is_global</span>(<span class='ident'>a</span>.<span class='ident'>ip</span>()),
         });
 
         <span class='ident'>bootstrap_contacts</span>.<span class='ident'>retain</span>(<span class='op'>|</span><span class='ident'>contact</span><span class='op'>|</span> <span class='op'>!</span><span class='ident'>prune</span>.<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='ident'>contact</span>));
@@ -420,7 +453,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>duplicates</span>() {
         <span class='kw'>let</span> <span class='ident'>number</span> <span class='op'>=</span> <span class='number'>10usize</span>;
-        <span class='kw'>let</span> <span class='ident'>contacts</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_endpoints</span>(<span class='ident'>number</span>);
+        <span class='kw'>let</span> <span class='ident'>contacts</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_global_endpoints</span>(<span class='ident'>number</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>contacts</span>.<span class='ident'>len</span>(), <span class='ident'>number</span>);
         <span class='kw'>let</span> <span class='ident'>_test_file</span> <span class='op'>=</span> <span class='ident'>TestFile</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
 
@@ -447,7 +480,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>prune</span>() {
         <span class='kw'>let</span> <span class='ident'>number</span> <span class='op'>=</span> <span class='number'>10usize</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>contacts</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_endpoints</span>(<span class='ident'>number</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>contacts</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_global_endpoints</span>(<span class='ident'>number</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>contacts</span>.<span class='ident'>len</span>(), <span class='ident'>number</span>);
         <span class='kw'>let</span> <span class='ident'>_test_file</span> <span class='op'>=</span> <span class='ident'>TestFile</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
 
@@ -475,7 +508,7 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>retrieved_contacts</span>, <span class='ident'>contacts</span>);
 
         <span class='comment'>// Create a new contact</span>
-        <span class='kw'>let</span> <span class='ident'>new_contact</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_endpoint</span>();
+        <span class='kw'>let</span> <span class='ident'>new_contact</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_global_endpoint</span>();
         <span class='kw'>let</span> <span class='ident'>new_contacts</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>new_contact</span>.<span class='ident'>clone</span>(); <span class='number'>1</span>];
 
         <span class='comment'>// Get the last contact in the list and prune it from the bootstrap file</span>
@@ -493,7 +526,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>max_contacts</span>() {
-        <span class='kw'>let</span> <span class='ident'>contacts</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_endpoints</span>(<span class='ident'>super</span>::<span class='ident'>BootstrapHandler</span>::<span class='ident'>max_contacts</span>());
+        <span class='kw'>let</span> <span class='ident'>contacts</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_global_endpoints</span>(<span class='ident'>super</span>::<span class='ident'>BootstrapHandler</span>::<span class='ident'>max_contacts</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>contacts</span>.<span class='ident'>len</span>(), <span class='ident'>super</span>::<span class='ident'>BootstrapHandler</span>::<span class='ident'>max_contacts</span>());
         <span class='kw'>let</span> <span class='ident'>_test_file</span> <span class='op'>=</span> <span class='ident'>TestFile</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
 
@@ -504,7 +537,7 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bootstrap_handler</span>.<span class='ident'>read_file</span>().<span class='ident'>unwrap</span>(), <span class='ident'>contacts</span>);
 
         <span class='comment'>// Create a new contact</span>
-        <span class='kw'>let</span> <span class='ident'>new_contact</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_endpoint</span>();
+        <span class='kw'>let</span> <span class='ident'>new_contact</span> <span class='op'>=</span> ::<span class='ident'>util</span>::<span class='ident'>random_global_endpoint</span>();
         <span class='kw'>let</span> <span class='ident'>new_contacts</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>new_contact</span>.<span class='ident'>clone</span>(); <span class='number'>1</span>];
 
         <span class='comment'>// Try inserting without also pruning - bootstrap contacts should remain unaltered</span>
@@ -595,6 +628,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@
 
     <title>solicit::http::connection::HttpConnection - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-719' class='srclink' href='../../../src/solicit/http/connection.rs.html#109-120' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-743' class='srclink' href='../../../src/solicit/http/connection.rs.html#109-120' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct HttpConnection&lt;S, R&gt; <span class='where'>where S: <a class='trait' href='../../../solicit/http/connection/trait.SendFrame.html' title='solicit::http::connection::SendFrame'>SendFrame</a>, R: <a class='trait' href='../../../solicit/http/connection/trait.ReceiveFrame.html' title='solicit::http::connection::ReceiveFrame'>ReceiveFrame</a></span> {
     pub receiver: R,
     pub sender: S,
@@ -102,7 +103,7 @@ stream.</p>
 <p>The <code>HttpConnection</code> itself does not track the flow control window and will happily send
 data that exceeds a particular stream&#39;s or the connection&#39;s flow control window size.</p>
 
-<h1 id='parameters' class='section-header'><a href='#parameters'>Parameters</a></h1>
+<h1 id='parameters-1' class='section-header'><a href='#parameters-1'>Parameters</a></h1>
 <ul>
 <li><code>data</code> - the data that should be sent on the connection</li>
 <li><code>stream_id</code> - the ID of the stream on which the data will be sent</li>
@@ -194,6 +195,6 @@ propagated.</p>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

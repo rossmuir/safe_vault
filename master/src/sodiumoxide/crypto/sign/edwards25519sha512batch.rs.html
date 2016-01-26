@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/sodiumoxide-0.0.8/src/crypto/sign/edwards25519sha512batch.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/sodiumoxide-0.0.9/src/crypto/sign/edwards25519sha512batch.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>edwards25519sha512batch.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
@@ -192,6 +193,11 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! WARNING: This signature software is a prototype. It has been replaced by the final system</span>
 <span class='doccomment'>//! [Ed25519](http://ed25519.cr.yp.to/). It is only kept here for compatibility reasons.</span>
@@ -200,8 +206,13 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>repeat</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
 
+<span class='doccomment'>/// Number of bytes in a `SecretKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SECRETKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_edwards25519sha512batch_SECRETKEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `PublicKey`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PUBLICKEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_edwards25519sha512batch_PUBLICKEYBYTES</span>;
+
+<span class='doccomment'>/// Number of bytes in a `Signature`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SIGNATUREBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_sign_edwards25519sha512batch_BYTES</span>;
 
 <span class='doccomment'>/// `SecretKey` for signatures</span>
@@ -405,6 +416,6 @@
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     
-    <script async src="../../../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>
