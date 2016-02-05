@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['ctrlc'] = [];implementors['bitflags'] = [];
+implementors['bitflags'] = [];implementors['ctrlc'] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
