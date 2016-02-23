@@ -46,13 +46,26 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-61' class='srclink' href='../src/ctrlc/lib.rs.html#80' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct CtrlC;</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../ctrlc/struct.CtrlC.html' title='ctrlc::CtrlC'>CtrlC</a></code></h3><div class='impl-items'><h4 id='method.set_handler' class='method'><code>fn <a href='#method.set_handler' class='fnname'>set_handler</a>&lt;F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a> + 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt;(user_handler: F)</code></h4>
-<div class='docblock'><p>Sets up the signal handler for Ctrl-C</p>
+        </span><a id='src-25' class='srclink' href='../src/ctrlc/lib.rs.html#76' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct CtrlC;</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../ctrlc/struct.CtrlC.html' title='ctrlc::CtrlC'>CtrlC</a></code></h3><div class='impl-items'><h4 id='method.set_handler' class='method'><code>fn <a href='#method.set_handler' class='fnname'>set_handler</a>&lt;F&gt;(user_handler: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a> + 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h4>
+<div class='docblock'><p>Sets up the signal handler for Ctrl-C using default polling rate of 100ms.</p>
 
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1><pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>ctrlc</span>::<span class='ident'>CtrlC</span>;
 <span class='ident'>CtrlC</span>::<span class='ident'>set_handler</span>(<span class='op'>||</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello world!&quot;</span>));</pre>
+</div><h4 id='method.set_handler_with_polling_rate' class='method'><code>fn <a href='#method.set_handler_with_polling_rate' class='fnname'>set_handler_with_polling_rate</a>&lt;F&gt;(user_handler: F, polling_rate: <a class='struct' href='https://doc.rust-lang.org/nightly/std/time/duration/struct.Duration.html' title='std::time::duration::Duration'>Duration</a>) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a> + 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h4>
+<div class='docblock'><p>Sets up the signal handler for Ctrl-C using a custom polling rate.
+The polling rate is the amount of time the internal spinloop of CtrlC sleeps between
+iterations. Because condition variables are not safe to use inside a signal handler,
+CtrlC (from version 1.1.0) uses a spinloop and an atomic boolean instead.</p>
+
+<p>Normally you should use <code>set_handler</code> instead, but if the default rate of  100 milliseconds
+is too fast or too slow for you, you can use this routine instead to set your own.</p>
+
+<h1 id='example-1' class='section-header'><a href='#example-1'>Example</a></h1><pre class='rust rust-example-rendered'>
+<span class='ident'>CtrlC</span>::<span class='ident'>set_handler_with_polling_rate</span>(
+    <span class='op'>||</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello world!&quot;</span>),
+    <span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>10</span>)
+);</pre>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

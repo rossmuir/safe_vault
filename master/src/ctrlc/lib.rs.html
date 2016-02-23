@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/ctrlc-1.0.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/ctrlc-1.1.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -143,6 +143,25 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2015 CtrlC developers</span>
 <span class='comment'>// Licensed under the Apache License, Version 2.0</span>
@@ -153,33 +172,32 @@
 <span class='comment'>// notice may not be copied, modified, or distributed except</span>
 <span class='comment'>// according to those terms.</span>
 
-<span class='doccomment'>//! A simple easy to use wrapper around Ctrl-C signal.</span>
-
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;nightly&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>static_condvar</span>))]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;nightly&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>static_mutex</span>))]</span>
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;stable&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lazy_static</span>;
+<span class='doccomment'>//! A simple easy to use wrapper around Ctrl-C.</span>
+<span class='doccomment'>//! # Example</span>
+<span class='doccomment'>//! ```no_run</span>
+<span class='doccomment'>//! extern crate ctrlc;</span>
+<span class='doccomment'>//! use ctrlc::CtrlC;</span>
+<span class='doccomment'>//! use std::sync::atomic::{AtomicBool, Ordering};</span>
+<span class='doccomment'>//! use std::sync::Arc;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! fn main() {</span>
+<span class='doccomment'>//!     let running = Arc::new(AtomicBool::new(true));</span>
+<span class='doccomment'>//!     let r = running.clone();</span>
+<span class='doccomment'>//!     CtrlC::set_handler(move || {</span>
+<span class='doccomment'>//!         r.store(false, Ordering::SeqCst);</span>
+<span class='doccomment'>//!     });</span>
+<span class='doccomment'>//!     println!(&quot;Waiting for Ctrl-C...&quot;);</span>
+<span class='doccomment'>//!     while running.load(Ordering::SeqCst) {}</span>
+<span class='doccomment'>//!     println!(&quot;Got it! Exiting...&quot;);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;nightly&quot;</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>features</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::{<span class='ident'>AtomicBool</span>, <span class='ident'>ATOMIC_BOOL_INIT</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>StaticCondvar</span>, <span class='ident'>CONDVAR_INIT</span>, <span class='ident'>StaticMutex</span>, <span class='ident'>MUTEX_INIT</span>};
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>CVAR</span>: <span class='ident'>StaticCondvar</span> <span class='op'>=</span> <span class='ident'>CONDVAR_INIT</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>MUTEX</span>: <span class='ident'>StaticMutex</span> <span class='op'>=</span> <span class='ident'>MUTEX_INIT</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>DONE</span>: <span class='ident'>AtomicBool</span> <span class='op'>=</span> <span class='ident'>ATOMIC_BOOL_INIT</span>;
-}
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;nightly&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>features</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::{<span class='ident'>AtomicBool</span>, <span class='ident'>ATOMIC_BOOL_INIT</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Condvar</span>, <span class='ident'>Mutex</span>};
-    <span class='macro'>lazy_static</span><span class='macro'>!</span> {
-        <span class='kw'>pub</span> <span class='kw'>static</span> <span class='kw-2'>ref</span> <span class='ident'>CVAR</span>: <span class='ident'>Condvar</span> <span class='op'>=</span> <span class='ident'>Condvar</span>::<span class='ident'>new</span>();
-        <span class='kw'>pub</span> <span class='kw'>static</span> <span class='kw-2'>ref</span> <span class='ident'>MUTEX</span>: <span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='boolval'>false</span>);
-    }
     <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>DONE</span>: <span class='ident'>AtomicBool</span> <span class='op'>=</span> <span class='ident'>ATOMIC_BOOL_INIT</span>;
 }
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>features</span>::<span class='op'>*</span>;
@@ -193,10 +211,8 @@
     <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>libc</span>::<span class='ident'>signal</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::<span class='ident'>Ordering</span>;
 
-    <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>handler</span>(_: <span class='ident'>c_int</span>) {
         <span class='ident'>super</span>::<span class='ident'>features</span>::<span class='ident'>DONE</span>.<span class='ident'>store</span>(<span class='boolval'>true</span>, <span class='ident'>Ordering</span>::<span class='ident'>Relaxed</span>);
-        <span class='ident'>super</span>::<span class='ident'>features</span>::<span class='ident'>CVAR</span>.<span class='ident'>notify_all</span>();
     }
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_os_handler</span>(<span class='ident'>handler</span>: <span class='kw'>fn</span>(<span class='ident'>c_int</span>)) {
@@ -213,7 +229,6 @@
 
     <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> <span class='kw'>fn</span> <span class='ident'>handler</span>(_: <span class='ident'>DWORD</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span> {
         <span class='ident'>super</span>::<span class='ident'>features</span>::<span class='ident'>DONE</span>.<span class='ident'>store</span>(<span class='boolval'>true</span>, <span class='ident'>Ordering</span>::<span class='ident'>Relaxed</span>);
-        <span class='ident'>super</span>::<span class='ident'>features</span>::<span class='ident'>CVAR</span>.<span class='ident'>notify_all</span>();
         <span class='ident'>TRUE</span>
     }
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -225,23 +240,46 @@
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CtrlC</span>;
 <span class='kw'>impl</span> <span class='ident'>CtrlC</span> {
-    <span class='doccomment'>/// Sets up the signal handler for Ctrl-C</span>
+    <span class='doccomment'>/// Sets up the signal handler for Ctrl-C using default polling rate of 100ms.</span>
     <span class='doccomment'>/// # Example</span>
     <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use ctrlc::CtrlC;</span>
+    <span class='doccomment'>/// # use ctrlc::CtrlC;</span>
     <span class='doccomment'>/// CtrlC::set_handler(|| println!(&quot;Hello world!&quot;));</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_handler</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>Fn</span>() <span class='op'>-&gt;</span> () <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span>(<span class='ident'>user_handler</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> () {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_handler</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>user_handler</span>: <span class='ident'>F</span>)
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Fn</span>() <span class='op'>-&gt;</span> () <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span>
+    {
+        <span class='ident'>CtrlC</span>::<span class='ident'>set_handler_with_polling_rate</span>(<span class='ident'>user_handler</span>, <span class='ident'>time</span>::<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>100</span>));
+    }
+
+    <span class='doccomment'>/// Sets up the signal handler for Ctrl-C using a custom polling rate.</span>
+    <span class='doccomment'>/// The polling rate is the amount of time the internal spinloop of CtrlC sleeps between</span>
+    <span class='doccomment'>/// iterations. Because condition variables are not safe to use inside a signal handler,</span>
+    <span class='doccomment'>/// CtrlC (from version 1.1.0) uses a spinloop and an atomic boolean instead.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Normally you should use `set_handler` instead, but if the default rate of  100 milliseconds</span>
+    <span class='doccomment'>/// is too fast or too slow for you, you can use this routine instead to set your own.</span>
+    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>/// # use std::time::Duration;</span>
+    <span class='doccomment'>/// # use ctrlc::CtrlC;</span>
+    <span class='doccomment'>/// CtrlC::set_handler_with_polling_rate(</span>
+    <span class='doccomment'>///     || println!(&quot;Hello world!&quot;),</span>
+    <span class='doccomment'>///     Duration::from_millis(10)</span>
+    <span class='doccomment'>/// );</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_handler_with_polling_rate</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>user_handler</span>: <span class='ident'>F</span>, <span class='ident'>polling_rate</span>: <span class='ident'>time</span>::<span class='ident'>Duration</span>)
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Fn</span>() <span class='op'>-&gt;</span> () <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span>
+    {
         <span class='kw'>unsafe</span> {
             <span class='ident'>set_os_handler</span>(<span class='ident'>handler</span>);
         }
-        ::<span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
+        <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
             <span class='kw'>loop</span> {
-                <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>DONE</span>.<span class='ident'>load</span>(<span class='ident'>Ordering</span>::<span class='ident'>Relaxed</span>) {
-                    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>CVAR</span>.<span class='ident'>wait</span>(<span class='ident'>MUTEX</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>());
-                    <span class='ident'>DONE</span>.<span class='ident'>store</span>(<span class='boolval'>false</span>, <span class='ident'>Ordering</span>::<span class='ident'>Relaxed</span>);
+                <span class='kw'>if</span> <span class='ident'>DONE</span>.<span class='ident'>compare_and_swap</span>(<span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='ident'>Ordering</span>::<span class='ident'>Relaxed</span>) {
+                    <span class='ident'>user_handler</span>();
                 }
-                <span class='ident'>user_handler</span>();
+                <span class='ident'>thread</span>::<span class='ident'>sleep</span>(<span class='ident'>polling_rate</span>);
             }
         });
     }
