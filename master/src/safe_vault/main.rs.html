@@ -164,7 +164,6 @@
 <span id="121">121</span>
 <span id="122">122</span>
 <span id="123">123</span>
-<span id="124">124</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -220,7 +219,6 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>docopt</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>kademlia_routing_table</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lru_time_cache</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>routing</span>;
@@ -278,9 +276,9 @@ Options:
     }
 
     <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>log_file</span>) <span class='op'>=</span> <span class='ident'>args</span>.<span class='ident'>flag_output</span> {
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span>::<span class='ident'>init_to_file</span>(<span class='boolval'>false</span>, <span class='ident'>log_file</span>));
+        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span>::<span class='ident'>init_to_file</span>(<span class='boolval'>false</span>, <span class='ident'>log_file</span>, <span class='boolval'>false</span>));
     } <span class='kw'>else</span> {
-        <span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span>::<span class='ident'>init</span>(<span class='boolval'>false</span>);
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span>::<span class='ident'>init</span>(<span class='boolval'>false</span>);
     }
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;Running &quot;</span>);
