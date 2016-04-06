@@ -307,14 +307,14 @@ Options:
     <span class='kw'>let</span> <span class='ident'>underline</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>String</span>::<span class='ident'>from_utf8</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&#39;=&#39;</span> <span class='kw'>as</span> <span class='ident'>u8</span>; <span class='ident'>message</span>.<span class='ident'>len</span>()]));
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;\n\n{}\n{}&quot;</span>, <span class='ident'>message</span>, <span class='ident'>underline</span>);
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vault</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Vault</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>));
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vault</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Vault</span>::<span class='ident'>new</span>());
     <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>vault</span>.<span class='ident'>run</span>());
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-crust&quot;</span>)]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_docs</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Error: mock crust not supported&quot;</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Error: mock crust not supported&quot;</span>);
 }
 </pre>
 </section>
