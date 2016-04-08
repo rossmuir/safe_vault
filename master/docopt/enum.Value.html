@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-266' class='srclink' href='../src/docopt/dopt.rs.html#522-543' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-260' class='srclink' href='../src/docopt/dopt.rs.html#523-544' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Value {
     Switch(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>),
     Counted(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>),
@@ -85,11 +85,11 @@ Lists are <code>true</code> if non-empty and <code>false</code> otherwise.</p>
 <p>Booleans are <code>1</code> if <code>true</code> and <code>0</code> otherwise.
 Plain strings are <code>1</code> if present and <code>0</code> otherwise.
 Lists correspond to its length.</p>
-</div><h4 id='method.as_str' class='method'><code>fn <a href='#method.as_str' class='fnname'>as_str</a>&lt;'a&gt;(&amp;'a self) -&gt; &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
+</div><h4 id='method.as_str' class='method'><code>fn <a href='#method.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
 <div class='docblock'><p>Returns the value as a string.</p>
 
 <p>All values return an empty string except for a non-empty plain string.</p>
-</div><h4 id='method.as_vec' class='method'><code>fn <a href='#method.as_vec' class='fnname'>as_vec</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;&amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</code></h4>
+</div><h4 id='method.as_vec' class='method'><code>fn <a href='#method.as_vec' class='fnname'>as_vec</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</code></h4>
 <div class='docblock'><p>Returns the value as a list of strings.</p>
 
 <p>Booleans, repetitions and empty strings correspond to an empty list.
