@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Vault","Main struct to hold all personas and Routing instance"]]});
