@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `main` fn in crate `safe_vault`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, main">
+    <meta name="description" content="API documentation for the Rust `Vault` struct in crate `safe_vault`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Vault">
 
-    <title>safe_vault::main - Rust</title>
+    <title>safe_vault::Vault - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -27,7 +27,7 @@
 
     <nav class="sidebar">
         <a href='../safe_vault/index.html'><img src='https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png' alt='' width='100'></a>
-        <p class='location'><a href='index.html'>safe_vault</a></p><script>window.sidebarCurrent = {name: 'main', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>safe_vault</a></p><script>window.sidebarCurrent = {name: 'Vault', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -41,14 +41,20 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>safe_vault</a>::<wbr><a class='fn' href=''>main</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>safe_vault</a>::<wbr><a class='struct' href=''>Vault</a></span><span class='out-of-band'><span id='render-detail'>
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-70' class='srclink' href='../src/safe_vault/safe_vault.rs.html#91-116' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn main()</pre><div class='docblock'><p>Runs a SAFE Network vault.</p>
-</div></section>
+        </span><a id='src-2761' class='srclink' href='../src/safe_vault/vault.rs.html#55-68' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Vault {
+    // some fields omitted
+}</pre><div class='docblock'><p>Main struct to hold all personas and Routing instance</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../safe_vault/struct.Vault.html' title='safe_vault::Vault'>Vault</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, InternalError&gt;</code></h4>
+<div class='docblock'><p>Creates a network Vault instance.</p>
+</div><h4 id='method.run' class='method'><code>fn <a href='#method.run' class='fnname'>run</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, InternalError&gt;</code></h4>
+<div class='docblock'><p>Run the event loop, processing events received from Routing.</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

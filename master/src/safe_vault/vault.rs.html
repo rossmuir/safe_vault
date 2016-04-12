@@ -26,7 +26,7 @@
     
 
     <nav class="sidebar">
-        <a href='../../vault/index.html'><img src='https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png' alt='' width='100'></a>
+        <a href='../../safe_vault/index.html'><img src='https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png' alt='' width='100'></a>
         
     </nav>
 
@@ -522,6 +522,8 @@
 <span id="479">479</span>
 <span id="480">480</span>
 <span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -570,11 +572,11 @@
 <span class='kw'>const</span> <span class='ident'>STUCTURED_DATA_MANAGER_ALLOWANCE</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='number'>0.3</span>;
 <span class='kw'>const</span> <span class='ident'>MPID_MANAGER_ALLOWANCE</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='number'>0.1</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>)))]</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>RoutingNode</span> <span class='op'>=</span> ::<span class='ident'>routing</span>::<span class='ident'>Node</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>not</span>(<span class='ident'>test</span>), <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-crust&quot;</span>))]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Node</span> <span class='kw'>as</span> <span class='ident'>RoutingNode</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>RoutingNode</span> <span class='op'>=</span> ::<span class='ident'>mock_routing</span>::<span class='ident'>MockRoutingNode</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-crust&quot;</span>)))]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mock_routing</span>::<span class='ident'>MockRoutingNode</span> <span class='kw'>as</span> <span class='ident'>RoutingNode</span>;
 
 <span class='doccomment'>/// Main struct to hold all personas and Routing instance</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Vault</span> {
@@ -776,7 +778,7 @@
             (<span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>Client</span> { .. },
              <span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>ClientManager</span>(_),
              <span class='kw-2'>&amp;</span><span class='ident'>RequestContent</span>::<span class='ident'>Put</span>(<span class='ident'>Data</span>::<span class='ident'>Structured</span>(_), _)) <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>maid_manager</span>.<span class='ident'>handle_put</span>(<span class='ident'>routing_node</span>, <span class='kw-2'>&amp;</span><span class='ident'>request</span>)
+                <span class='self'>self</span>.<span class='ident'>maid_manager</span>.<span class='ident'>handle_put</span>(<span class='ident'>routing_node</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>full_pmid_nodes</span>, <span class='kw-2'>&amp;</span><span class='ident'>request</span>)
             }
             (<span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>Client</span> { .. },
              <span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>ClientManager</span>(_),
@@ -840,7 +842,9 @@
                 <span class='self'>self</span>.<span class='ident'>structured_data_manager</span>.<span class='ident'>handle_delete</span>(<span class='ident'>routing_node</span>, <span class='kw-2'>&amp;</span><span class='ident'>request</span>)
             }
             <span class='comment'>// ================== Refresh ==================</span>
-            (<span class='ident'>src</span>, <span class='ident'>dst</span>, <span class='kw-2'>&amp;</span><span class='ident'>RequestContent</span>::<span class='ident'>Refresh</span>(<span class='kw-2'>ref</span> <span class='ident'>serialised_refresh</span>, _)) <span class='op'>=&gt;</span> {
+            (<span class='ident'>src</span>,
+             <span class='ident'>dst</span>,
+             <span class='kw-2'>&amp;</span><span class='ident'>RequestContent</span>::<span class='ident'>Refresh</span>(<span class='kw-2'>ref</span> <span class='ident'>serialised_refresh</span>, _)) <span class='op'>=&gt;</span> {
                 <span class='self'>self</span>.<span class='ident'>on_refresh</span>(<span class='ident'>src</span>, <span class='ident'>dst</span>, <span class='ident'>serialised_refresh</span>)
             }
             <span class='comment'>// ================== Invalid Request ==================</span>
@@ -882,18 +886,18 @@
             <span class='comment'>// ================== PutSuccess ==================</span>
             (<span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(_),
              <span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>ClientManager</span>(_),
-             <span class='kw-2'>&amp;</span><span class='ident'>ResponseContent</span>::<span class='ident'>PutSuccess</span>(<span class='kw-2'>ref</span> <span class='ident'>message_id</span>)) <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>maid_manager</span>.<span class='ident'>handle_put_success</span>(<span class='ident'>routing_node</span>, <span class='ident'>message_id</span>)
+             <span class='kw-2'>&amp;</span><span class='ident'>ResponseContent</span>::<span class='ident'>PutSuccess</span>(<span class='kw-2'>ref</span> <span class='ident'>name</span>, <span class='kw-2'>ref</span> <span class='ident'>message_id</span>)) <span class='op'>=&gt;</span> {
+                <span class='self'>self</span>.<span class='ident'>maid_manager</span>.<span class='ident'>handle_put_success</span>(<span class='ident'>routing_node</span>, <span class='ident'>name</span>, <span class='ident'>message_id</span>)
             }
             (<span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>NodeManager</span>(<span class='kw-2'>ref</span> <span class='ident'>pmid_node</span>),
              <span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(_),
-             <span class='kw-2'>&amp;</span><span class='ident'>ResponseContent</span>::<span class='ident'>PutSuccess</span>(<span class='kw-2'>ref</span> <span class='ident'>message_id</span>)) <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>immutable_data_manager</span>.<span class='ident'>handle_put_success</span>(<span class='ident'>pmid_node</span>, <span class='ident'>message_id</span>)
+             <span class='kw-2'>&amp;</span><span class='ident'>ResponseContent</span>::<span class='ident'>PutSuccess</span>(<span class='kw-2'>ref</span> <span class='ident'>name</span>, <span class='kw-2'>ref</span> <span class='ident'>message_id</span>)) <span class='op'>=&gt;</span> {
+                <span class='self'>self</span>.<span class='ident'>immutable_data_manager</span>.<span class='ident'>handle_put_success</span>(<span class='ident'>pmid_node</span>, <span class='ident'>name</span>, <span class='ident'>message_id</span>)
             }
             (<span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>ManagedNode</span>(<span class='kw-2'>ref</span> <span class='ident'>pmid_node</span>),
              <span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>NodeManager</span>(_),
-             <span class='kw-2'>&amp;</span><span class='ident'>ResponseContent</span>::<span class='ident'>PutSuccess</span>(<span class='kw-2'>ref</span> <span class='ident'>message_id</span>)) <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>pmid_manager</span>.<span class='ident'>handle_put_success</span>(<span class='ident'>routing_node</span>, <span class='ident'>pmid_node</span>, <span class='ident'>message_id</span>)
+             <span class='kw-2'>&amp;</span><span class='ident'>ResponseContent</span>::<span class='ident'>PutSuccess</span>(<span class='kw-2'>ref</span> <span class='ident'>name</span>, <span class='kw-2'>ref</span> <span class='ident'>message_id</span>)) <span class='op'>=&gt;</span> {
+                <span class='self'>self</span>.<span class='ident'>pmid_manager</span>.<span class='ident'>handle_put_success</span>(<span class='ident'>routing_node</span>, <span class='ident'>pmid_node</span>, <span class='ident'>name</span>, <span class='ident'>message_id</span>)
             }
             <span class='comment'>// ================== PutFailure ==================</span>
             (<span class='kw-2'>&amp;</span><span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(_),
@@ -1058,7 +1062,7 @@
 
     <script>
         window.rootPath = "../../";
-        window.currentCrate = "vault";
+        window.currentCrate = "safe_vault";
         window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
