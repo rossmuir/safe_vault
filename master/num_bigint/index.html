@@ -55,7 +55,8 @@ A <code>BigInt</code> is a combination of <code>BigUint</code> and <code>Sign</c
 <p>Common numerical operations are overloaded, so we can treat them
 the same way we treat other numbers.</p>
 
-<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_bigint</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_traits</span>;
 
@@ -79,6 +80,7 @@ the same way we treat other numbers.</p>
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;fib(1000) = {}&quot;</span>, <span class='ident'>fib</span>(<span class='number'>1000</span>));</pre>
 
 <p>It&#39;s easy to generate large random numbers:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_bigint</span> <span class='kw'>as</span> <span class='ident'>bigint</span>;
@@ -111,7 +113,6 @@ the same way we treat other numbers.</p>
                                title='num_bigint::BigInt'>BigInt</a></td>
                         <td class='docblock short'>
                              <p>A big signed integer type.</p>
-
                         </td>
                     </tr>
                 
@@ -120,7 +121,6 @@ the same way we treat other numbers.</p>
                                title='num_bigint::BigUint'>BigUint</a></td>
                         <td class='docblock short'>
                              <p>A big unsigned integer type.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -138,7 +138,6 @@ the same way we treat other numbers.</p>
                                title='num_bigint::Sign'>Sign</a></td>
                         <td class='docblock short'>
                              <p>A Sign is a <code>BigInt</code>&#39;s composing element.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
@@ -165,7 +164,6 @@ the same way we treat other numbers.</p>
                                title='num_bigint::ToBigInt'>ToBigInt</a></td>
                         <td class='docblock short'>
                              <p>A generic trait for converting a value to a <code>BigInt</code>.</p>
-
                         </td>
                     </tr>
                 
@@ -174,7 +172,6 @@ the same way we treat other numbers.</p>
                                title='num_bigint::ToBigUint'>ToBigUint</a></td>
                         <td class='docblock short'>
                              <p>A generic trait for converting a value to a <code>BigUint</code>.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
@@ -184,7 +181,6 @@ the same way we treat other numbers.</p>
                                title='num_bigint::BigDigit'>BigDigit</a></td>
                         <td class='docblock short'>
                              <p>A <code>BigDigit</code> is a <code>BigUint</code>&#39;s composing element.</p>
-
                         </td>
                     </tr>
                 
@@ -194,7 +190,6 @@ the same way we treat other numbers.</p>
                         <td class='docblock short'>
                              <p>A <code>DoubleBigDigit</code> is the internal type used to do the computations.  Its
 size is the double of the size of <code>BigDigit</code>.</p>
-
                         </td>
                     </tr>
                 </table></section>
@@ -240,7 +235,7 @@ size is the double of the size of <code>BigDigit</code>.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

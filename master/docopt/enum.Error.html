@@ -68,6 +68,7 @@ bad argv, no match or bad decode).</p>
 <p>Generally, you want to parse the usage string, try to match the argv
 and then quit the program if there was an error reported at any point
 in that process. This can be achieved like so:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>docopt</span>::<span class='ident'>Docopt</span>;
 
@@ -79,34 +80,34 @@ Usage: ...
                   .<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>d</span>.<span class='ident'>parse</span>())
                   .<span class='ident'>unwrap_or_else</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>exit</span>());</pre>
 </div><h2 class='variants'>Variants</h2>
-<table><tr><td id='variant.Usage'><code>Usage</code></td><td><div class='docblock'><p>Parsing the usage string failed.</p>
+<table class='variants_table'><tr><td id='variant.Usage'><code>Usage</code></td><td><div class='docblock'><p>Parsing the usage string failed.</p>
 
 <p>This error can only be triggered by the programmer, i.e., the writer
 of the Docopt usage string. This error is usually indicative of a bug
 in your program.</p>
-</div></td></tr><tr><td id='variant.Argv'><code>Argv</code></td><td><div class='docblock'><p>Parsing the argv specified failed.</p>
+</div></td><td></td></tr><tr><td id='variant.Argv'><code>Argv</code></td><td><div class='docblock'><p>Parsing the argv specified failed.</p>
 
 <p>The payload is a string describing why the arguments provided could not
 be parsed.</p>
 
 <p>This is distinct from <code>NoMatch</code> because it will catch errors like
 using flags that aren&#39;t defined in the usage string.</p>
-</div></td></tr><tr><td id='variant.NoMatch'><code>NoMatch</code></td><td><div class='docblock'><p>The given argv parsed successfully, but it did not match any example
+</div></td><td></td></tr><tr><td id='variant.NoMatch'><code>NoMatch</code></td><td><div class='docblock'><p>The given argv parsed successfully, but it did not match any example
 usage of the program.</p>
 
 <p>Regrettably, there is no descriptive message describing <em>why</em> the
 given argv didn&#39;t match any of the usage strings.</p>
-</div></td></tr><tr><td id='variant.Decode'><code>Decode</code></td><td><div class='docblock'><p>This indicates a problem decoding a successful argv match into a
+</div></td><td></td></tr><tr><td id='variant.Decode'><code>Decode</code></td><td><div class='docblock'><p>This indicates a problem decoding a successful argv match into a
 decodable value.</p>
-</div></td></tr><tr><td id='variant.WithProgramUsage'><code>WithProgramUsage</code></td><td><div class='docblock'><p>Parsing failed, and the program usage should be printed next to the
+</div></td><td></td></tr><tr><td id='variant.WithProgramUsage'><code>WithProgramUsage</code></td><td><div class='docblock'><p>Parsing failed, and the program usage should be printed next to the
 failure message. Typically this wraps <code>Argv</code> and <code>NoMatch</code> errors.</p>
-</div></td></tr><tr><td id='variant.Help'><code>Help</code></td><td><div class='docblock'><p>Decoding or parsing failed because the command line specified that the
+</div></td><td></td></tr><tr><td id='variant.Help'><code>Help</code></td><td><div class='docblock'><p>Decoding or parsing failed because the command line specified that the
 help message should be printed.</p>
-</div></td></tr><tr><td id='variant.Version'><code>Version</code></td><td><div class='docblock'><p>Decoding or parsing failed because the command line specified that the
+</div></td><td></td></tr><tr><td id='variant.Version'><code>Version</code></td><td><div class='docblock'><p>Decoding or parsing failed because the command line specified that the
 version should be printed</p>
 
 <p>The version is included as a payload to this variant.</p>
-</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='enum' href='../docopt/enum.Error.html' title='docopt::Error'>Error</a></code></h3><div class='impl-items'><h4 id='method.fatal' class='method'><code>fn <a href='#method.fatal' class='fnname'>fatal</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='enum' href='../docopt/enum.Error.html' title='docopt::Error'>Error</a></code></h3><div class='impl-items'><h4 id='method.fatal' class='method'><code>fn <a href='#method.fatal' class='fnname'>fatal</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Return whether this was a fatal error or not.</p>
 
 <p>Non-fatal errors include requests to print the help or version
@@ -166,7 +167,7 @@ exit status will be <code>1</code>.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

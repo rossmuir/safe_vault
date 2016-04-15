@@ -26,7 +26,7 @@
     
 
     <nav class="sidebar">
-        <a href='../num/index.html'><img src='http://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='' width='100'></a>
+        <a href='../num/index.html'><img src='http://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
         <p class='location'></p><script>window.sidebarCurrent = {name: 'num', ty: 'mod', relpath: '../'};</script>
     </nav>
 
@@ -56,6 +56,7 @@ and generic range iterators.</p>
 <h2 id='example' class='section-header'><a href='#example'>Example</a></h2>
 <p>This example uses the BigRational type and <a href="https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method">Newton&#39;s method</a> to
 approximate a square root to arbitrary precision:</p>
+
 <span class='rusttest'>extern crate num;
 #[cfg(all(feature = &quot;bigint&quot;, feature=&quot;rational&quot;))]
 mod test {
@@ -172,7 +173,6 @@ fn main() {
                                title='num::BigInt'>BigInt</a></td>
                         <td class='docblock short'>
                              <p>A big signed integer type.</p>
-
                         </td>
                     </tr>
                 
@@ -181,7 +181,6 @@ fn main() {
                                title='num::BigUint'>BigUint</a></td>
                         <td class='docblock short'>
                              <p>A big unsigned integer type.</p>
-
                         </td>
                     </tr>
                 
@@ -190,7 +189,6 @@ fn main() {
                                title='num::Complex'>Complex</a></td>
                         <td class='docblock short'>
                              <p>A complex number in Cartesian form.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
@@ -200,7 +198,6 @@ fn main() {
                                title='num::Bounded'>Bounded</a></td>
                         <td class='docblock short'>
                              <p>Numbers which have upper and lower bounds</p>
-
                         </td>
                     </tr>
                 
@@ -210,7 +207,6 @@ fn main() {
                         <td class='docblock short'>
                              <p>Performs addition that returns <code>None</code> instead of wrapping around on
 overflow.</p>
-
                         </td>
                     </tr>
                 
@@ -220,7 +216,6 @@ overflow.</p>
                         <td class='docblock short'>
                              <p>Performs division that returns <code>None</code> instead of panicking on division by zero and instead of
 wrapping around on underflow and overflow.</p>
-
                         </td>
                     </tr>
                 
@@ -230,7 +225,6 @@ wrapping around on underflow and overflow.</p>
                         <td class='docblock short'>
                              <p>Performs multiplication that returns <code>None</code> instead of wrapping around on underflow or
 overflow.</p>
-
                         </td>
                     </tr>
                 
@@ -239,7 +233,6 @@ overflow.</p>
                                title='num::CheckedSub'>CheckedSub</a></td>
                         <td class='docblock short'>
                              <p>Performs subtraction that returns <code>None</code> instead of wrapping around on underflow.</p>
-
                         </td>
                     </tr>
                 
@@ -256,7 +249,6 @@ overflow.</p>
                                title='num::FromPrimitive'>FromPrimitive</a></td>
                         <td class='docblock short'>
                              <p>A generic trait for converting a number to a value.</p>
-
                         </td>
                     </tr>
                 
@@ -273,7 +265,6 @@ overflow.</p>
                                title='num::Num'>Num</a></td>
                         <td class='docblock short'>
                              <p>The base trait for numeric types</p>
-
                         </td>
                     </tr>
                 
@@ -282,7 +273,6 @@ overflow.</p>
                                title='num::NumCast'>NumCast</a></td>
                         <td class='docblock short'>
                              <p>An interface for casting between machine scalars.</p>
-
                         </td>
                     </tr>
                 
@@ -291,7 +281,6 @@ overflow.</p>
                                title='num::One'>One</a></td>
                         <td class='docblock short'>
                              <p>Defines a multiplicative identity element for <code>Self</code>.</p>
-
                         </td>
                     </tr>
                 
@@ -308,7 +297,6 @@ overflow.</p>
                                title='num::Saturating'>Saturating</a></td>
                         <td class='docblock short'>
                              <p>Saturating math operations</p>
-
                         </td>
                     </tr>
                 
@@ -317,7 +305,6 @@ overflow.</p>
                                title='num::Signed'>Signed</a></td>
                         <td class='docblock short'>
                              <p>Useful functions for signed numbers (i.e. numbers that can be negative).</p>
-
                         </td>
                     </tr>
                 
@@ -326,7 +313,6 @@ overflow.</p>
                                title='num::ToPrimitive'>ToPrimitive</a></td>
                         <td class='docblock short'>
                              <p>A generic trait for converting a value to a number.</p>
-
                         </td>
                     </tr>
                 
@@ -335,7 +321,6 @@ overflow.</p>
                                title='num::Unsigned'>Unsigned</a></td>
                         <td class='docblock short'>
                              <p>A trait for values which cannot be negative</p>
-
                         </td>
                     </tr>
                 
@@ -344,7 +329,6 @@ overflow.</p>
                                title='num::Zero'>Zero</a></td>
                         <td class='docblock short'>
                              <p>Defines an additive identity element for <code>Self</code>.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -354,7 +338,6 @@ overflow.</p>
                                title='num::abs'>abs</a></td>
                         <td class='docblock short'>
                              <p>Computes the absolute value.</p>
-
                         </td>
                     </tr>
                 
@@ -363,7 +346,6 @@ overflow.</p>
                                title='num::abs_sub'>abs_sub</a></td>
                         <td class='docblock short'>
                              <p>The positive difference of two numbers.</p>
-
                         </td>
                     </tr>
                 
@@ -372,7 +354,6 @@ overflow.</p>
                                title='num::checked_pow'>checked_pow</a></td>
                         <td class='docblock short'>
                              <p>Raises a value to the power of exp, returning <code>None</code> if an overflow occurred.</p>
-
                         </td>
                     </tr>
                 
@@ -381,7 +362,6 @@ overflow.</p>
                                title='num::one'>one</a></td>
                         <td class='docblock short'>
                              <p>Returns the multiplicative identity, <code>1</code>.</p>
-
                         </td>
                     </tr>
                 
@@ -390,7 +370,6 @@ overflow.</p>
                                title='num::pow'>pow</a></td>
                         <td class='docblock short'>
                              <p>Raises a value to the power of exp, using exponentiation by squaring.</p>
-
                         </td>
                     </tr>
                 
@@ -400,7 +379,6 @@ overflow.</p>
                         <td class='docblock short'>
                              <p>Returns an iterator over the given range [start, stop) (that is, starting
 at start (inclusive), and ending at stop (exclusive)).</p>
-
                         </td>
                     </tr>
                 
@@ -409,7 +387,6 @@ at start (inclusive), and ending at stop (exclusive)).</p>
                                title='num::range_inclusive'>range_inclusive</a></td>
                         <td class='docblock short'>
                              <p>Return an iterator over the range [start, stop]</p>
-
                         </td>
                     </tr>
                 
@@ -418,7 +395,6 @@ at start (inclusive), and ending at stop (exclusive)).</p>
                                title='num::range_step'>range_step</a></td>
                         <td class='docblock short'>
                              <p>Return an iterator over the range [start, stop) by <code>step</code>. It handles overflow by stopping.</p>
-
                         </td>
                     </tr>
                 
@@ -427,7 +403,6 @@ at start (inclusive), and ending at stop (exclusive)).</p>
                                title='num::range_step_inclusive'>range_step_inclusive</a></td>
                         <td class='docblock short'>
                              <p>Return an iterator over the range [start, stop] by <code>step</code>. It handles overflow by stopping.</p>
-
                         </td>
                     </tr>
                 
@@ -436,7 +411,6 @@ at start (inclusive), and ending at stop (exclusive)).</p>
                                title='num::signum'>signum</a></td>
                         <td class='docblock short'>
                              <p>Returns the sign of the number.</p>
-
                         </td>
                     </tr>
                 
@@ -445,7 +419,6 @@ at start (inclusive), and ending at stop (exclusive)).</p>
                                title='num::zero'>zero</a></td>
                         <td class='docblock short'>
                              <p>Returns the additive identity, <code>0</code>.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
@@ -508,7 +481,7 @@ at start (inclusive), and ending at stop (exclusive)).</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
