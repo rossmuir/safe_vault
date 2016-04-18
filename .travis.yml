@@ -125,6 +125,8 @@ before_install:
   - export PATH="$PATH:$HOME/.cargo/bin"
 
 install:
+  - curl -sSLO https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/install_libsodium.sh
+  - . install_libsodium.sh
   - bash ci/install.sh
 
 script:
