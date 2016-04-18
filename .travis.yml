@@ -127,6 +127,7 @@ before_install:
 install:
   - curl -sSLO https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/install_libsodium.sh
   - . install_libsodium.sh
+  - cd $TRAVIS_BUILD_DIR
   - bash ci/install.sh
 
 script:
